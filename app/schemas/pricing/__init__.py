@@ -7,6 +7,7 @@ from app.schemas.pricing.request import (
 )
 from app.schemas.pricing.response import (
     BookingFinancialSnapshotResponse,
+    BookingLineItemBreakdownResponse,
     CommissionRuleResponse,
     PriceBookEntryResponse,
     ServiceOfferingResponse,
@@ -22,5 +23,6 @@ __all__ = [
     "PriceBookEntryResponse",
     "CommissionRuleResponse",
     "BookingFinancialSnapshotResponse",
+    "BookingLineItemBreakdownResponse",
 ]
 

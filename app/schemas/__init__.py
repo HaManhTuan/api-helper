@@ -34,6 +34,7 @@ from .users import (  # Internal schemas; Request/Response schemas; Converters
 # Pricing/Catalog schemas
 from .pricing import (  # Catalog/pricing/commission snapshots
     BookingFinancialSnapshotResponse,
+    BookingLineItemBreakdownResponse,
     BookingSnapshotComputeRequest,
     CommissionRuleResponse,
     CommissionRuleUpsertRequest,
@@ -43,6 +44,9 @@ from .pricing import (  # Catalog/pricing/commission snapshots
     ServiceOfferingResponse,
     ServiceOfferingUpdateRequest,
 )
+
+# Tax/VAT schemas
+from .tax import TaxConfigResponse, TaxConfigUpsertRequest, TaxRuleResponse, TaxRuleUpsertRequest
 
 __all__ = [
     # Common
@@ -76,4 +80,10 @@ __all__ = [
     "CommissionRuleResponse",
     "BookingSnapshotComputeRequest",
     "BookingFinancialSnapshotResponse",
+    "BookingLineItemBreakdownResponse",
+    # Tax/VAT
+    "TaxRuleUpsertRequest",
+    "TaxRuleResponse",
+    "TaxConfigUpsertRequest",
+    "TaxConfigResponse",
 ]

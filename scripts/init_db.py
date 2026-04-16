@@ -25,6 +25,7 @@ from app.config.staff_rbac import COMMON_PERMISSIONS, COMMON_ROLES
 from app.models.permission import Permission
 from app.models.role import Role
 from app.models.role_permission import RolePermission
+from app.models.tax_rule import TaxRule
 from app.models.user import User
 from app.utils.logger import get_logger
 
@@ -55,6 +56,7 @@ def init_db() -> None:
     db = SyncSession()
     try:
         role_by_code = _seed_common_roles_permissions(db)
+        _seed_default_tax_rule(db)
 
         # Check if we have any users
         user_count = db.query(User).count()
@@ -128,6 +130,37 @@ def _seed_common_roles_permissions(db) -> dict[str, Role]:
     db.commit()
     logger.info("Seeded common roles/permissions catalog successfully")
     return role_by_code
+
+
+def _seed_default_tax_rule(db) -> None:
+    """
+    Seed a global default VAT rule if none exists.
+
+    Default:
+    - VAT 10%
+    - inclusive display
+    - commission base before VAT
+    """
+    existing = db.query(TaxRule).filter(TaxRule.deleted_at.is_(None)).count()
+    if existing > 0:
+        return
+
+    from datetime import datetime
+
+    rule = TaxRule(
+        service_offering_id=None,
+        vat_rate=10,
+        price_display_mode="inclusive",
+        commission_base="before_vat",
+        rounding_mode="half_up",
+        effective_from=datetime(2020, 1, 1),
+        effective_to=None,
+        priority=0,
+        active=True,
+    )
+    db.add(rule)
+    db.commit()
+    logger.info("Seeded default tax rule (VAT 10% inclusive, commission base before_vat)")
 
 
 if __name__ == "__main__":

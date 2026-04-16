@@ -8,6 +8,7 @@ from app.models.user import User
 from app.schemas.common import ResponseBuilder, SuccessResponse
 from app.schemas.pricing import (
     BookingFinancialSnapshotResponse,
+    BookingLineItemBreakdownResponse,
     BookingSnapshotComputeRequest,
     CommissionRuleResponse,
     CommissionRuleUpsertRequest,
@@ -159,9 +160,11 @@ async def compute_booking_snapshot(
             booking_id=snap.booking_id,
             currency=snap.currency,
             customer_total=int(snap.customer_total),
+            subtotal_before_tax=int(snap.subtotal_before_tax),
+            tax_total=int(snap.tax_total),
             helper_total=int(snap.helper_total),
             platform_total=int(snap.platform_total),
-            line_items=snap.line_items,  # type: ignore[arg-type]
+            line_items=[BookingLineItemBreakdownResponse(**li) for li in snap.line_items],  # type: ignore[arg-type]
             computed_at=snap.computed_at,
         ),
     )

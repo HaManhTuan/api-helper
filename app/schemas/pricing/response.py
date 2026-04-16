@@ -53,7 +53,12 @@ class BookingLineItemBreakdownResponse(BaseSchema):
     service_code: str
     quantity: int
     unit_price: int
+    subtotal_before_tax: int
+    tax_amount: int
     line_total: int
+    vat_rate: float
+    price_display_mode: str
+    commission_base: str
     helper_earnings: int
     platform_fee: int
     applied_price_entry_id: Optional[str] = None
@@ -65,6 +70,8 @@ class BookingFinancialSnapshotResponse(BaseSchema):
     booking_id: str
     currency: str
     customer_total: int
+    subtotal_before_tax: int
+    tax_total: int
     helper_total: int
     platform_total: int
     line_items: List[BookingLineItemBreakdownResponse]
