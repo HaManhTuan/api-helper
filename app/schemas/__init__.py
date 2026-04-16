@@ -31,6 +31,19 @@ from .users import (  # Internal schemas; Request/Response schemas; Converters
     convert_user_update_request_to_internal,
 )
 
+# Pricing/Catalog schemas
+from .pricing import (  # Catalog/pricing/commission snapshots
+    BookingFinancialSnapshotResponse,
+    BookingSnapshotComputeRequest,
+    CommissionRuleResponse,
+    CommissionRuleUpsertRequest,
+    PriceBookEntryResponse,
+    PriceBookEntryUpsertRequest,
+    ServiceOfferingCreateRequest,
+    ServiceOfferingResponse,
+    ServiceOfferingUpdateRequest,
+)
+
 __all__ = [
     # Common
     "BaseSchema",
@@ -53,4 +66,14 @@ __all__ = [
     "convert_user_registration_to_internal",
     "convert_user_create_request_to_internal",
     "convert_user_update_request_to_internal",
+    # Pricing/Catalog
+    "ServiceOfferingCreateRequest",
+    "ServiceOfferingUpdateRequest",
+    "ServiceOfferingResponse",
+    "PriceBookEntryUpsertRequest",
+    "PriceBookEntryResponse",
+    "CommissionRuleUpsertRequest",
+    "CommissionRuleResponse",
+    "BookingSnapshotComputeRequest",
+    "BookingFinancialSnapshotResponse",
 ]
