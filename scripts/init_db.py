@@ -4,18 +4,27 @@ Database initialization script.
 This script runs migrations and adds seed data if needed.
 Run this script when setting up the application for the first time.
 """
+import importlib
 import os
 import sys
 from pathlib import Path
 
 # Add parent directory to path to import app modules
-sys.path.append(str(Path(__file__).parent.parent))
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
+if "" in sys.path:
+    sys.path.remove("")
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from alembic import command
-from alembic.config import Config
+command = importlib.import_module("alembic.command")
+Config = importlib.import_module("alembic.config").Config
+from app.config.staff_rbac import COMMON_PERMISSIONS, COMMON_ROLES
+from app.models.permission import Permission
+from app.models.role import Role
+from app.models.role_permission import RolePermission
 from app.models.user import User
 from app.utils.logger import get_logger
 
@@ -45,6 +54,8 @@ def init_db() -> None:
     # Create a database session
     db = SyncSession()
     try:
+        role_by_code = _seed_common_roles_permissions(db)
+
         # Check if we have any users
         user_count = db.query(User).count()
 
@@ -58,6 +69,9 @@ def init_db() -> None:
                 status="active",
                 password="adminpassword",  # nosec B106 - Development default
             )
+            super_admin_role = role_by_code.get("super_admin")
+            if super_admin_role:
+                admin_user.staff_role_id = super_admin_role.id
             db.add(admin_user)
             db.commit()
             logger.info(f"Admin user created with identifier: {admin_user.identifier}, ID: {admin_user.id}")
@@ -69,6 +83,51 @@ def init_db() -> None:
         raise
     finally:
         db.close()
+
+
+def _seed_common_roles_permissions(db) -> dict[str, Role]:
+    """Seed system-managed common roles and permissions."""
+    permission_by_code: dict[str, Permission] = {}
+    for code in COMMON_PERMISSIONS:
+        permission = db.query(Permission).filter(Permission.code == code, Permission.deleted_at.is_(None)).first()
+        if not permission:
+            parts = code.split(":")
+            resource = parts[0]
+            action = ":".join(parts[1:]) if len(parts) > 1 else "manage"
+            permission = Permission(code=code, resource=resource, action=action, description=code)
+            db.add(permission)
+            db.flush()
+        permission_by_code[code] = permission
+
+    role_by_code: dict[str, Role] = {}
+    for role_code, role_config in COMMON_ROLES.items():
+        role = db.query(Role).filter(Role.code == role_code, Role.deleted_at.is_(None)).first()
+        if not role:
+            role = Role(
+                name=str(role_config["name"]),
+                code=role_code,
+                description=str(role_config.get("description", "")),
+                is_system="true",
+            )
+            db.add(role)
+            db.flush()
+
+        role_by_code[role_code] = role
+        expected_codes = set(role_config["permissions"])  # type: ignore[arg-type]
+        existing = (
+            db.query(RolePermission)
+            .filter(RolePermission.role_id == role.id, RolePermission.deleted_at.is_(None))
+            .all()
+        )
+        existing_permission_ids = {rp.permission_id for rp in existing}
+        for permission_code in expected_codes:
+            permission = permission_by_code[permission_code]
+            if permission.id not in existing_permission_ids:
+                db.add(RolePermission(role_id=role.id, permission_id=permission.id))
+
+    db.commit()
+    logger.info("Seeded common roles/permissions catalog successfully")
+    return role_by_code
 
 
 if __name__ == "__main__":

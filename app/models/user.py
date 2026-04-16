@@ -1,6 +1,7 @@
 from typing import Optional
 
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, ForeignKey, String
+from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.models.base_model import BaseModel
@@ -16,6 +17,7 @@ class User(BaseModel):
     password_hash = Column(String(255), nullable=False)
     status = Column(String(20), nullable=False, default="active")
     last_login_at = Column(DateTime, nullable=True)
+    staff_role_id = Column(String, ForeignKey("roles.id"), nullable=True, index=True)
 
     def __init__(
         self,
@@ -69,7 +71,7 @@ class User(BaseModel):
         return self.identifier or ""
 
     # Relationships
-    # No relationships defined - User model is standalone
+    staff_role = relationship("Role", back_populates="users")
 
     def __repr__(self) -> str:
         """String representation"""

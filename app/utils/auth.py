@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Optional
 
 import jwt
 from fastapi import Depends
@@ -143,3 +143,34 @@ async def get_current_admin_user(current_user: User = Depends(get_current_user))
     if current_user.role != "admin":
         raise ForbiddenException("Admin access is required")
     return current_user
+
+
+async def get_current_internal_user(current_user: User = Depends(get_current_user)) -> User:
+    """
+    Ensure current user is an internal user (staff/admin) and active.
+    """
+    if current_user.role not in {"admin", "staff"}:
+        raise ForbiddenException("Internal staff access is required")
+    if current_user.status != "active":
+        raise InactiveUserException("Inactive internal user")
+    return current_user
+
+
+def require_permission(permission_code: str) -> Callable[..., Any]:
+    """
+    Dependency factory to enforce staff permission matrix checks.
+    """
+
+    async def _permission_dependency(
+        current_user: User = Depends(get_current_internal_user),
+        db: AsyncSession = Depends(get_db),
+    ) -> User:
+        if current_user.role == "admin":
+            return current_user
+
+        permissions = await user_service.get_effective_permissions(db=db, user=current_user)
+        if permission_code not in permissions:
+            raise ForbiddenException(f"Missing required permission: {permission_code}")
+        return current_user
+
+    return _permission_dependency

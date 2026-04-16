@@ -6,16 +6,22 @@ Supports both sync and async database connections.
 """
 
 import argparse
+import importlib
 import os
 import sys
 from pathlib import Path
 from typing import Optional
 
 # Add the parent directory to the Python path to make imports work
-sys.path.append(str(Path(__file__).parent.parent))
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
 
-from alembic import command
-from alembic.config import Config
+# Prevent local "./alembic" package from shadowing installed Alembic library.
+if "" in sys.path:
+    sys.path.remove("")
+
+command = importlib.import_module("alembic.command")
+Config = importlib.import_module("alembic.config").Config
 from app.config.database import get_sync_database_url
 from app.utils.logger import get_logger
 

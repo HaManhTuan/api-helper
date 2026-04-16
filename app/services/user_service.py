@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -95,6 +95,16 @@ class UserService(BaseService[User, UserRepository]):
             obj_in=update_data,
             expected_updated_at=expected_updated_at,
         )
+
+    async def get_effective_permissions(self, db: AsyncSession, user: User) -> List[str]:
+        """
+        Resolve permissions for internal users from source of truth.
+        """
+        if user.role == "admin":
+            return ["*"]
+        if user.role != "staff":
+            return []
+        return await user_repository.get_permission_codes(db=db, user_id=user.id)
 
 
 # Create instance for dependency injection
