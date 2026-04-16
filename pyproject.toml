@@ -2,7 +2,7 @@
 name = "basefastapimvc"
 version = "0.1.0"
 description = "FastAPI MVC application with service layer"
-authors = ["longnv@kaopiz.com"]
+authors = ["tuanhanb98@gmail.com"]
 package-mode = false
 readme = "README.md"
 
