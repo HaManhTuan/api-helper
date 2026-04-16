@@ -1,166 +1,169 @@
-# FastAPI MVC Application
+# API Helper Fast
 
-A modern FastAPI application following MVC architecture with service layer, featuring async database operations, comprehensive logging, background workers, and Docker support.
+Backend API for a housemaid booking platform, built with FastAPI and layered architecture (`controller -> service -> repository`).
 
-## Quick Start
+This project includes:
+- JWT authentication and role-based access control (customer/helper/admin/staff)
+- Staff RBAC matrix with common system-managed roles/permissions
+- PostgreSQL + Alembic migrations
+- Redis + Celery worker
+- Docker-first local development flow
 
-### Prerequisites
+## Tech Stack
 
-- Python 3.9+
-- Poetry
+- Python 3.12
+- FastAPI
+- SQLAlchemy
+- Alembic
 - PostgreSQL
-- Redis (for Celery workers)
-- Docker & Docker Compose (optional)
+- Redis
+- Celery
+- Poetry
+- Docker Compose
 
-### Installation
+## Quick Start (Docker - Recommended)
 
-1. **Clone and install dependencies:**
-   ```bash
-   git clone <repository-url>
-   cd baseFastApiMVC
-   poetry install
-   ```
-
-2. **Set up environment:**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-3. **Set up database:**
-   ```bash
-   # Create PostgreSQL database
-   createdb fastapi_mvc
-
-   # Apply migrations
-   poetry run python scripts/manage_migrations.py upgrade
-   ```
-
-4. **Run the application:**
-   ```bash
-   # Start API server
-   poetry run uvicorn main:app --reload
-
-   # Start Celery worker (in another terminal)
-   poetry run celery -A app.workers.celery_worker worker --loglevel=info
-
-   # Start scheduler (in another terminal)
-   poetry run python -m app.jobs.scheduler
-   ```
-
-### Docker Setup (Alternative)
+1. Copy environment file:
 
 ```bash
-# Start all services with Docker
-docker-compose up --build
-
-# Access the application
-# API: http://localhost:8000
-# Docs: http://localhost:8000/docs
+cp .env.example .env
 ```
+
+2. Build images:
+
+```bash
+make build
+```
+
+3. Start services:
+
+```bash
+make up
+```
+
+4. Apply migrations:
+
+```bash
+make migrate-up
+```
+
+5. Initialize DB (seed common roles/permissions and default admin if needed):
+
+```bash
+make db-init
+```
+
+## Service Endpoints
+
+- API: `http://localhost:8000`
+- Swagger: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+- Postgres (host): `localhost:5433`
+- Redis (host): `localhost:6379`
+
+## Common Make Commands
+
+### Docker lifecycle
+
+```bash
+make build
+make up
+make down
+make restart
+make ps
+make logs
+make logs-app
+make logs-worker
+```
+
+### Shell into containers
+
+```bash
+make sh-app
+make sh-db
+make sh-redis
+```
+
+### Migrations / DB init (inside app container)
+
+```bash
+make migrate-up
+make migrate-down
+make migrate-create MSG="add something"
+make migrate-history
+make migrate-current
+make db-init
+```
+
+### Local-only alternatives (non-docker)
+
+```bash
+make migrate-up-local
+make migrate-down-local
+make migrate-create-local MSG="add something"
+make migrate-history-local
+make migrate-current-local
+make db-init-local
+```
+
+### Quality / tests
+
+```bash
+make test
+make test-cov
+make lint
+make precommit
+```
+
+## Staff RBAC (Common Catalog)
+
+Roles and permissions are system-managed common data (not created from current UI flow):
+
+- Seed source: `app/config/staff_rbac.py`
+- Seeded by: `scripts/init_db.py` / `make db-init`
+- Related entities:
+  - `roles`
+  - `permissions`
+  - `rolepermissions`
+  - `staffauditlogs`
+  - `users.staff_role_id`
+
+Admin APIs for staff management live under `/api/v1/admin` and enforce permission checks from database source of truth.
 
 ## Project Structure
 
-```
-baseFastApiMVC/
+```text
+api-helper-fast/
 ├── app/
-│   ├── config/         # Configuration and settings
-│   ├── controllers/    # API route handlers
-│   ├── models/         # Database models
-│   ├── services/       # Business logic layer
-│   ├── repositories/   # Data access layer
-│   ├── schemas/        # Pydantic models
-│   ├── middlewares/    # Custom middleware
-│   ├── utils/          # Utility functions
-│   ├── workers/        # Background workers
-│   └── jobs/           # Scheduled jobs
-├── tests/              # Test suite
-├── alembic/            # Database migrations
-├── scripts/            # Utility scripts
-├── docs/               # Documentation
-└── main.py             # Application entry point
-```
-
-## Key Features
-
-- **MVC Architecture** with service layer
-- **Async Database Operations** with sync migrations
-- **Comprehensive Logging** system
-- **Background Workers** with Celery
-- **Scheduled Tasks** with APScheduler
-- **Docker Support** with PostgreSQL
-- **Database Migrations** with Alembic
-- **API Documentation** with Swagger/ReDoc
-
-## API Documentation
-
-- **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
-
-## Testing
-
-```bash
-# Run all tests
-poetry run pytest
-
-# Run with coverage
-poetry run pytest --cov=app
-
-# Run specific test file
-poetry run pytest tests/api/test_health.py
-```
-
-## Common Commands
-
-```bash
-# Database migrations
-poetry run python scripts/manage_migrations.py upgrade
-poetry run python scripts/manage_migrations.py create -m "description"
-
-# Run tests
-poetry run python scripts/run_tests.py
-
-# Initialize database
-poetry run python scripts/init_db.py
-
-# Code quality (pre-commit)
-poetry run pre-commit run --all-files
-poetry run pre-commit install
+│   ├── config/
+│   ├── controllers/
+│   ├── models/
+│   ├── repositories/
+│   ├── schemas/
+│   ├── services/
+│   ├── middlewares/
+│   ├── utils/
+│   └── workers/
+├── alembic/
+├── scripts/
+├── docs/
+├── tests/
+├── docker-compose.yml
+├── Dockerfile
+└── Makefile
 ```
 
 ## Documentation
 
-For detailed information, see the documentation in the `docs/` folder:
+Main references:
+- `docs/specs/001-housemaid-booking-api/spec.md`
+- `docs/specs/admin/admin-staff-and-roles.md`
+- `docs/development-guide.md`
+- `docs/quick-reference.md`
+- `docs/database_migrations.md`
 
-### Development Guides
-- **[Development Guide](docs/development-guide.md)** - Complete guide for adding new features with base service and repository
-- **[Quick Reference](docs/quick-reference.md)** - Templates and patterns for CRUD operations
+## Notes
 
-### Architecture & Patterns
-- [Architecture](docs/architecture.md) - System architecture and design patterns
-- [Models Guide](docs/models_guide.md) - Database models guide
-- [Repositories Guide](docs/repositories_guide.md) - Repository pattern guide
-- [Services Guide](docs/services_guide.md) - Service layer guide
-- [Controllers Guide](docs/controllers_guide.md) - API controllers guide
-
-### Operations & Deployment
-- [Database Migrations](docs/database_migrations.md) - Complete migration guide
-- [Environment Variables](docs/environment_variables.md) - Configuration reference
-- [Project Scripts](docs/project_scripts.md) - Utility scripts guide
-- [Deployment](docs/deployment.md) - Production deployment guide
-
-### Testing & Quality
-- [API Testing Guide](docs/api_testing_guide.md) - Testing best practices
-- [Pre-commit Setup](docs/pre_commit_setup.md) - Code quality and pre-commit hooks
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License.
+- Do not commit `.env`.
+- For DataGrip local DB connection, use port `5433` (not `5432`) by default.
+- `make migrate-*` commands are configured to run in the app container for consistent runtime behavior.

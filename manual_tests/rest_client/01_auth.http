@@ -18,8 +18,8 @@ POST {{baseUrl}}/api/{{apiVersion}}/auth/register
 Content-Type: application/json
 
 {
-    "username": "longnv",
-    "email": "longnv@kaopiz.com",
+    "username": "tuanhanb98",
+    "email": "tuanhanb98@gmail.com",
     "password": "12345678",
     "full_name": "Long Nguyen"
 }
