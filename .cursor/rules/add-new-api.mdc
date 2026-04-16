@@ -1,0 +1,26 @@
+---
+description: using when add new api
+alwaysApply: false
+---
+# Add New API Rule
+
+When adding a new API, you must:
+
+1. Read and follow `docs/development-guide.md`.
+2. Read `docs/quick-reference.md` for `base_service` and `base_repository` usage.
+3. Follow architecture conventions in `.cursor/rules/architecture.mdc`.
+4. Read and apply spec requirements in `docs/specs/001-housemaid-booking-api/spec.md` and relevant role modules.
+
+API implementation checklist:
+
+- Create/update controller in `app/controllers/` using `APIRouter`.
+- Delegate business logic to `app/services/`.
+- Reuse base methods in `BaseService` and `FullRepositoryImpl` before adding custom methods.
+- Return responses via `ResponseBuilder.success()` / `ResponseBuilder.error()`.
+- Add or update request/response/internal schemas and converters in `app/schemas/{domain}/`.
+- Validate endpoint behavior against locked requirements when relevant:
+  - Quote-before-booking (`FR-043`)
+  - KYC upload contract (`FR-044`)
+  - Internal JWT issuer/claims consistency (`FR-045`)
+  - Rate limiting and structured `429` (`FR-046`)
+  - `403` for eligibility fail vs `422` for invalid payload (`FR-047`)

@@ -1,0 +1,35 @@
+---
+description: enforce implementation alignment with docs/specs
+alwaysApply: true
+---
+# Spec Alignment Rule
+
+All implementation and API design decisions must align with `docs/specs/`.
+
+## Required Spec Sources
+
+1. `docs/specs/README.md` (cross-cutting decisions)
+2. `docs/specs/001-housemaid-booking-api/spec.md` (FR-001+ single source)
+3. Role modules:
+   - `docs/specs/customer/`
+   - `docs/specs/helper/`
+   - `docs/specs/admin/`
+
+## Binding Requirements (Must Not Be Violated)
+
+- **FR-043**: Quote is mandatory before booking. `POST /bookings` must require a valid `quote_id`; reject missing/unknown/expired/stale quote (`409` for stale quote).
+- **FR-044**: Helper KYC upload must use presigned object upload flow, MIME allowlist (`image/jpeg`, `image/png`, `application/pdf`), max 10 MiB, and short-lived upload URL.
+- **FR-045**: Internal Staff/Admin JWT must use the same issuer/signing configuration and same API base as Customer/Helper tokens. Enforce roles/permissions from verified claims.
+- **FR-046**: Public APIs must apply combined IP-based and token-based rate limiting with a consistent structured 429 error.
+- **FR-047**: Return `403 Forbidden` for authenticated-but-ineligible business actions (for example helper eligibility gating). Reserve `422` for invalid payload semantics.
+
+## Domain Guardrails
+
+- Service geography is Hanoi-only unless specs are explicitly changed.
+- Keep one-role-per-account assumption unless specs are explicitly updated.
+- Booking lifecycle behavior must match the status model in `spec.md`.
+- Privileged internal actions must be audit-logged (FR-018).
+
+## Conflict Resolution
+
+If any project rule conflicts with `docs/specs/001-housemaid-booking-api/spec.md`, follow the spec and update the conflicting rule.

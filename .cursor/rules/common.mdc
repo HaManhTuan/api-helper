@@ -1,0 +1,22 @@
+---
+alwaysApply: true
+---
+
+# Common Rules
+
+## Core Working Rules
+
+1. This project runs with Poetry. Always use `poetry run ...` for project commands.
+2. Follow SOLID principles and clean code conventions.
+3. The documentation entry point is `README.md`, which links to detailed docs in `docs/`.
+4. After code changes, run `poetry run pre-commit run --all-files` to verify quality gates.
+
+## Rule Priority (Conflict Resolution)
+
+When instructions conflict, apply this priority order:
+
+1. Feature specs in `docs/specs/001-housemaid-booking-api/spec.md` and related module specs
+2. Task-specific project rules (for example, `add-new-api.mdc`)
+3. Architecture rules (`architecture.mdc`)
+4. Common rules (`common.mdc`)
+5. Generic skills/templates in `.agents/skills`

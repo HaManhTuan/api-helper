@@ -1,0 +1,47 @@
+# Cursor Agent Operating Rules (Project-Level)
+
+This project requires strict spec-first and rule-first execution for every AI coding task.
+
+## Mandatory Priority Order
+
+When there is any ambiguity or conflict, apply this order:
+
+1. `docs/specs/001-housemaid-booking-api/spec.md` and related files in `docs/specs/**`
+2. `.cursor/rules/spec-alignment.mdc`
+3. Other project rules in `.cursor/rules/*.mdc`
+4. Project skills in `.agents/skills/**/SKILL.md`
+5. Generic/global skills only when not conflicting with project rules
+
+## Always-Apply Requirements For Every Coding Task
+
+- Read relevant `docs/specs/**` documents before implementing API or business logic.
+- Keep endpoint behavior aligned with locked requirements (`FR-043` to `FR-047`) when applicable.
+- Follow project architecture: `controller -> service -> repository`.
+- Keep handlers thin in `app/controllers/`; business logic in `app/services/`; data access in repositories.
+- Use project response/error conventions (`ResponseBuilder`, structured errors).
+- Enforce strict RBAC and role boundaries (customer/helper/staff/admin).
+- Add or update tests for happy path and important error paths.
+- Run quality checks before finishing (`poetry run pre-commit run --all-files`) when code changes are made.
+
+## Skills and Rules Enforcement
+
+- Always apply project rules under `.cursor/rules/`.
+- Prefer project skills under `.agents/skills/` before using generic templates.
+- When the user asks to create a commit (or mentions `/commit`), prioritize the project skill `.agents/skills/git-commit/SKILL.md`.
+- For commit tasks, keep workflow safe and non-interactive: avoid `git add -p`, never use destructive git commands, never skip hooks unless explicitly requested.
+- Do not introduce code patterns that conflict with project rules or specs.
+- If a generic skill conflicts with this repository rules/specs, ignore the generic guidance.
+
+## API-Specific Guardrails
+
+- Booking creation requires quote-first flow (`quote_id`) per FR-043.
+- Helper KYC upload must follow presigned-upload constraints per FR-044.
+- Internal staff/admin auth must follow single-issuer JWT behavior per FR-045.
+- Public APIs must implement consistent rate limit behavior and structured `429` per FR-046.
+- Return `403` for eligibility failure and `422` for invalid payload semantics per FR-047.
+
+## Delivery Behavior
+
+- If requested task is implementation, perform end-to-end changes instead of giving only plans.
+- Keep scope aligned with the role/module under `docs/specs/{customer,helper,admin}/`.
+- Do not silently bypass specs; raise a clear note if any requested change conflicts with specs.
