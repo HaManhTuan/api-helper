@@ -16,6 +16,8 @@ from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.service_offering import ServiceOffering
 from app.models.staff_audit_log import StaffAuditLog
+from app.models.tax_config import TaxConfig
+from app.models.tax_rule import TaxRule
 from app.models.user import User
 
 __all__ = [
@@ -29,5 +31,7 @@ __all__ = [
     "CommissionRule",
     "BookingFinancialSnapshot",
     "CommercialAuditLog",
+    "TaxRule",
+    "TaxConfig",
     "User",
 ]

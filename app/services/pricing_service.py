@@ -17,6 +17,7 @@ from app.repositories.concrete.commission_rule_repository import commission_rule
 from app.repositories.concrete.price_book_entry_repository import price_book_entry_repository
 from app.repositories.concrete.service_offering_repository import service_offering_repository
 from app.schemas.pricing import BookingSnapshotComputeRequest, CommissionRuleUpsertRequest, PriceBookEntryUpsertRequest
+from app.services.tax_service import tax_service
 
 
 class PricingService:
@@ -162,6 +163,8 @@ class PricingService:
 
         line_breakdowns = []
         customer_total = 0
+        subtotal_before_tax_total = 0
+        tax_total = 0
         helper_total = 0
         platform_total = 0
 
@@ -188,10 +191,23 @@ class PricingService:
                 raise NotFoundException("No commission rule configured (default or service-specific)")
 
             unit_price = int(price_entry.customer_price)
-            line_total = unit_price * int(item.quantity)
+            raw_line_amount = unit_price * int(item.quantity)
+
+            tax_rule = await tax_service.resolve_tax_rule(db=db, service_offering_id=offering.id, at=computed_at)
+            vat_rate = Decimal(str(tax_rule.vat_rate)) if tax_rule else Decimal("0")
+            display_mode = tax_rule.price_display_mode if tax_rule else "inclusive"
+            commission_base = tax_rule.commission_base if tax_rule else "before_vat"
+
+            subtotal_before_tax, line_tax, line_total = tax_service.compute_tax_breakdown(
+                gross_or_net_amount=raw_line_amount,
+                vat_rate=vat_rate,
+                display_mode=display_mode,
+            )
+
+            commission_amount = subtotal_before_tax if commission_base == "before_vat" else line_total
 
             helper_earnings, platform_fee = self._split_commission(
-                base_amount=line_total,
+                base_amount=commission_amount,
                 helper_percent=Decimal(str(rule.helper_percent)),
                 platform_percent=Decimal(str(rule.platform_percent)),
                 fixed_helper_fee=int(rule.fixed_helper_fee),
@@ -199,6 +215,8 @@ class PricingService:
             )
 
             customer_total += line_total
+            subtotal_before_tax_total += subtotal_before_tax
+            tax_total += line_tax
             helper_total += helper_earnings
             platform_total += platform_fee
 
@@ -210,7 +228,12 @@ class PricingService:
                     "service_code": item.service_code,
                     "quantity": int(item.quantity),
                     "unit_price": unit_price,
+                    "subtotal_before_tax": subtotal_before_tax,
+                    "tax_amount": line_tax,
                     "line_total": line_total,
+                    "vat_rate": float(vat_rate),
+                    "price_display_mode": display_mode,
+                    "commission_base": commission_base,
                     "helper_earnings": helper_earnings,
                     "platform_fee": platform_fee,
                     "applied_price_entry_id": price_entry.id,
@@ -218,7 +241,7 @@ class PricingService:
                 }
             )
 
-        if customer_total != helper_total + platform_total:
+        if customer_total != helper_total + platform_total and subtotal_before_tax_total != helper_total + platform_total:
             # Allow a 1 VND rounding difference later; for now enforce exact to keep deterministic.
             raise ConflictException("Breakdown does not reconcile (customer_total != helper_total + platform_total)")
 
@@ -226,6 +249,8 @@ class PricingService:
             booking_id=payload.booking_id,
             currency=currency,
             customer_total=customer_total,
+            subtotal_before_tax=subtotal_before_tax_total,
+            tax_total=tax_total,
             helper_total=helper_total,
             platform_total=platform_total,
             applied_price_entry_id=applied_price_entry_id,
