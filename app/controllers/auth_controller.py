@@ -29,12 +29,12 @@ protected_router = APIRouter()
 logger = get_trace_logger("auth-controller")
 
 
-def _build_auth_claims(user: User) -> Dict[str, object]:
+async def _build_auth_claims(user: User, db: AsyncSession) -> Dict[str, object]:
     """
     Build JWT claims aligned with FR-045.
     """
     roles = [user.role]
-    permissions = ["*"] if user.role == "admin" else []
+    permissions = await user_service.get_effective_permissions(db=db, user=user)
     return {
         "sub": user.identifier,
         "roles": roles,
@@ -74,7 +74,7 @@ async def login_for_access_token(
 
     # Create access token
     access_token_expires = timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data=_build_auth_claims(user), expires_delta=access_token_expires)
+    access_token = create_access_token(data=await _build_auth_claims(user, db), expires_delta=access_token_expires)
 
     logger.info(f"User {login_data.identifier} logged in successfully")
 
@@ -111,7 +111,7 @@ async def register(
 
     # Create access token
     access_token_expires = timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data=_build_auth_claims(user), expires_delta=access_token_expires)
+    access_token = create_access_token(data=await _build_auth_claims(user, db), expires_delta=access_token_expires)
 
     logger.info(f"User registered successfully: {user.identifier}")
 

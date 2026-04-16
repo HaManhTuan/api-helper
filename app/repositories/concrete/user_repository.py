@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -40,6 +40,28 @@ class UserRepository(RepositoryImpl[User]):
     async def get_by_username(self, db: AsyncSession, username: str) -> Optional[User]:
         """Backward-compatible alias for identifier lookup."""
         return await self.get_by_identifier(db=db, identifier=username)
+
+    async def list_internal_staff(self, db: AsyncSession) -> List[User]:
+        """List all internal staff/admin accounts."""
+        result = await db.execute(select(User).filter(User.role.in_(["staff", "admin"])))
+        return list(result.scalars().all())
+
+    async def get_permission_codes(self, db: AsyncSession, user_id: str) -> List[str]:
+        """
+        Resolve effective permission codes for a user from role mapping.
+        """
+        from app.models.permission import Permission
+        from app.models.role_permission import RolePermission
+        from app.models.user import User
+
+        stmt = (
+            select(Permission.code)
+            .join(RolePermission, RolePermission.permission_id == Permission.id)
+            .join(User, User.staff_role_id == RolePermission.role_id)
+            .where(User.id == user_id, User.deleted_at.is_(None))
+        )
+        result = await db.execute(stmt)
+        return [code for code in result.scalars().all()]
 
 
 # Create instance for dependency injection
