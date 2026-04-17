@@ -62,6 +62,13 @@ from .helpers import (
     HelperProfileResponse,
     HelperProfileUpsertRequest,
 )
+from .bookings import (
+    AdminAssignBookingRequest,
+    AdminBookingFilterRequest,
+    AdminCancelBookingRequest,
+    AdminReassignBookingRequest,
+    BookingResponse,
+)
 
 __all__ = [
     # Common
@@ -119,4 +126,10 @@ __all__ = [
     "HelperDocumentResponse",
     "HelperDocumentUploadIntentResponse",
     "HelperEligibilityResponse",
+    # Admin booking operations
+    "AdminAssignBookingRequest",
+    "AdminReassignBookingRequest",
+    "AdminCancelBookingRequest",
+    "AdminBookingFilterRequest",
+    "BookingResponse",
 ]
