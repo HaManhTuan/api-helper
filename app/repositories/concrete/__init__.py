@@ -8,6 +8,7 @@ providing model-specific database operations and business logic.
 from .booking_repository import BookingRepository, booking_repository
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
 from .content_block_repository import ContentBlockRepository, content_block_repository
+from .customer_profile_repository import CustomerProfileRepository, customer_profile_repository
 from .dispute_adjustment_repository import DisputeAdjustmentRepository, dispute_adjustment_repository
 from .dispute_repository import DisputeRepository, dispute_repository
 from .helper_document_repository import HelperDocumentRepository, helper_document_repository
@@ -25,6 +26,7 @@ from .promotion_redemption_repository import PromotionRedemptionRepository, prom
 from .promotion_repository import PromotionRepository, promotion_repository
 from .review_repository import ReviewRepository, review_repository
 from .report_export_job_repository import ReportExportJobRepository, report_export_job_repository
+from .saved_address_repository import SavedAddressRepository, saved_address_repository
 from .service_offering_repository import ServiceOfferingRepository, service_offering_repository
 from .tax_rule_repository import TaxRuleRepository, tax_rule_repository
 from .user_repository import UserRepository, user_repository
@@ -36,6 +38,8 @@ __all__ = [
     "booking_repository",
     "ContentBlockRepository",
     "content_block_repository",
+    "CustomerProfileRepository",
+    "customer_profile_repository",
     "DisputeRepository",
     "dispute_repository",
     "DisputeAdjustmentRepository",
@@ -74,6 +78,8 @@ __all__ = [
     "review_repository",
     "ReportExportJobRepository",
     "report_export_job_repository",
+    "SavedAddressRepository",
+    "saved_address_repository",
     "TaxRuleRepository",
     "tax_rule_repository",
 ]

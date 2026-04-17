@@ -97,6 +97,13 @@ from .customers import (
     PrivacyRequestResponse,
     PrivacyRequestReviewRequest,
 )
+from .customer_portal import (
+    CustomerProfileResponse as CustomerPortalProfileResponse,
+    CustomerProfileUpdateRequest,
+    SavedAddressCreateRequest,
+    SavedAddressResponse,
+    SavedAddressUpdateRequest,
+)
 from .payouts import (
     PayoutBatchDetailResponse,
     PayoutBatchGenerateRequest,
@@ -201,6 +208,12 @@ __all__ = [
     "AdminCustomerListItemResponse",
     "AdminCustomerDetailResponse",
     "PrivacyRequestResponse",
+    # Customer profile/preferences
+    "CustomerProfileUpdateRequest",
+    "SavedAddressCreateRequest",
+    "SavedAddressUpdateRequest",
+    "CustomerPortalProfileResponse",
+    "SavedAddressResponse",
     # Payouts and settlement
     "PayoutBatchGenerateRequest",
     "PayoutBatchMarkPaidRequest",

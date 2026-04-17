@@ -12,6 +12,7 @@ from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
 from app.models.content_block import ContentBlock
+from app.models.customer_profile import CustomerProfile
 from app.models.dispute import Dispute
 from app.models.dispute_adjustment import DisputeAdjustment
 from app.models.helper_document import HelperDocument
@@ -31,6 +32,7 @@ from app.models.promotion_redemption import PromotionRedemption
 from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.report_export_job import ReportExportJob
+from app.models.saved_address import SavedAddress
 from app.models.review import Review
 from app.models.service_offering import ServiceOffering
 from app.models.staff_audit_log import StaffAuditLog
@@ -45,6 +47,8 @@ __all__ = [
     "RolePermission",
     "ReportExportJob",
     "Review",
+    "CustomerProfile",
+    "SavedAddress",
     "StaffAuditLog",
     "ServiceOffering",
     "Booking",
