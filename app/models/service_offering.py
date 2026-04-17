@@ -15,6 +15,8 @@ class ServiceOffering(BaseModel):
     description = Column(Text, nullable=True)
     unit = Column(String(50), nullable=False, default="hour")  # e.g. hour, m2, package
     active = Column(Boolean, nullable=False, default=True, index=True)
+    insurance_required = Column(Boolean, nullable=False, default=False)
+    insurance_enforcement = Column(String(20), nullable=False, default="hard")  # hard/soft
 
     tags = Column(JSONB, nullable=False, default=list)
     meta = Column("metadata", JSONB, nullable=False, default=dict)

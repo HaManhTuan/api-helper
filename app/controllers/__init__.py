@@ -8,6 +8,8 @@ from app.controllers import (
     health_controller,
     helper_kyc_controller,
     helper_moderation_controller,
+    content_policy_controller,
+    insurance_risk_controller,
     language_controller,
     pricing_controller,
     payout_controller,
@@ -35,7 +37,13 @@ api_router.include_router(
     admin_customer_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Customers"], requires_auth=True
 )
 api_router.include_router(
+    content_policy_controller.admin_router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Content"], requires_auth=True
+)
+api_router.include_router(
     staff_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Staff"], requires_auth=True
+)
+api_router.include_router(
+    insurance_risk_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Insurance"], requires_auth=True
 )
 api_router.include_router(
     booking_operations_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Booking Ops"], requires_auth=True
@@ -63,4 +71,7 @@ api_router.include_router(
 )
 api_router.include_router(
     helper_kyc_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Helper KYC"], requires_auth=True
+)
+api_router.include_router(
+    content_policy_controller.public_router, prefix=f"{API_V1_PREFIX}", tags=["Public Content"]
 )
