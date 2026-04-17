@@ -30,6 +30,7 @@ from app.models.promotion import Promotion
 from app.models.promotion_redemption import PromotionRedemption
 from app.models.role import Role
 from app.models.role_permission import RolePermission
+from app.models.report_export_job import ReportExportJob
 from app.models.review import Review
 from app.models.service_offering import ServiceOffering
 from app.models.staff_audit_log import StaffAuditLog
@@ -42,6 +43,7 @@ __all__ = [
     "Role",
     "Permission",
     "RolePermission",
+    "ReportExportJob",
     "Review",
     "StaffAuditLog",
     "ServiceOffering",

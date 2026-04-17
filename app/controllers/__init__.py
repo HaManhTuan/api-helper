@@ -1,6 +1,7 @@
 from app.config.constants import API_V1_PREFIX
 from app.config.custom_router import APIRouter as CustomAPIRouter
 from app.controllers import (
+    analytics_controller,
     auth_controller,
     admin_customer_controller,
     booking_operations_controller,
@@ -32,6 +33,9 @@ api_router.include_router(auth_controller.public_router, prefix=f"{API_V1_PREFIX
 # Protected auth routes (profile)
 api_router.include_router(
     auth_controller.protected_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Authentication"], requires_auth=True
+)
+api_router.include_router(
+    analytics_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Analytics"], requires_auth=True
 )
 api_router.include_router(
     admin_customer_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Customers"], requires_auth=True
