@@ -3,6 +3,7 @@
 Backend API for a housemaid booking platform, built with FastAPI and layered architecture (`controller -> service -> repository`).
 
 This project includes:
+
 - JWT authentication and role-based access control (customer/helper/admin/staff)
 - Staff RBAC matrix with common system-managed roles/permissions
 - PostgreSQL + Alembic migrations
@@ -29,25 +30,25 @@ This project includes:
 cp .env.example .env
 ```
 
-2. Build images:
+1. Build images:
 
 ```bash
 make build
 ```
 
-3. Start services:
+1. Start services:
 
 ```bash
 make up
 ```
 
-4. Apply migrations:
+1. Apply migrations:
 
 ```bash
 make migrate-up
 ```
 
-5. Initialize DB (seed common roles/permissions and default admin if needed):
+1. Initialize DB (seed common roles/permissions and default admin if needed):
 
 ```bash
 make db-init
@@ -74,6 +75,38 @@ make ps
 make logs
 make logs-app
 make logs-worker
+```
+
+### Production deploy (Ubuntu server)
+
+1. Prepare production env:
+
+```bash
+cp .env.prod.example .env.prod
+```
+
+1. Update secrets in `.env.prod` (`POSTGRES_PASSWORD`, `JWT_SECRET_KEY`, etc).
+
+1. Run one-command deploy:
+
+```bash
+make prod-deploy
+```
+
+Or with script directly:
+
+```bash
+./scripts/deploy.sh
+```
+
+Useful production commands:
+
+```bash
+make prod-config
+make prod-build
+make prod-up
+make prod-logs
+make prod-down
 ```
 
 ### Shell into containers
@@ -156,8 +189,10 @@ api-helper-fast/
 ## Documentation
 
 Main references:
+
 - `docs/specs/001-housemaid-booking-api/spec.md`
 - `docs/specs/admin/admin-staff-and-roles.md`
+- `docs/deployment-ubuntu.md`
 - `docs/development-guide.md`
 - `docs/quick-reference.md`
 - `docs/database_migrations.md`
