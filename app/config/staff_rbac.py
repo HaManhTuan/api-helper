@@ -27,6 +27,7 @@ COMMON_PERMISSIONS: List[str] = [
     "payouts:mark_paid",
     "audit:read",
     "reports:export",
+    "analytics:read",
 ]
 
 COMMON_ROLES: Dict[str, Dict[str, object]] = {
@@ -51,17 +52,25 @@ COMMON_ROLES: Dict[str, Dict[str, object]] = {
             "kyc:review",
             "disputes:manage",
             "adjustments:manage",
+            "analytics:read",
         ],
     },
     "finance": {
         "name": "Finance",
         "description": "Payout and financial approval operations.",
-        "permissions": ["payouts:read", "payouts:generate", "payouts:approve", "payouts:mark_paid", "reports:export"],
+        "permissions": [
+            "payouts:read",
+            "payouts:generate",
+            "payouts:approve",
+            "payouts:mark_paid",
+            "reports:export",
+            "analytics:read",
+        ],
     },
     "support": {
         "name": "Support",
         "description": "Read-focused operational support access.",
-        "permissions": ["users:read", "bookings:read:all", "reviews:moderate", "insurance:read"],
+        "permissions": ["users:read", "bookings:read:all", "reviews:moderate", "insurance:read", "analytics:read"],
     },
     "readonly": {
         "name": "Read Only",
