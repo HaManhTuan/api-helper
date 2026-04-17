@@ -18,6 +18,8 @@ from app.models.helper_document_type import HelperDocumentType
 from app.models.helper_profile import HelperProfile
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
+from app.models.privacy_request import PrivacyRequest
+from app.models.privacy_request_event import PrivacyRequestEvent
 from app.models.promotion import Promotion
 from app.models.promotion_redemption import PromotionRedemption
 from app.models.role import Role
@@ -37,6 +39,8 @@ __all__ = [
     "ServiceOffering",
     "Booking",
     "PriceBookEntry",
+    "PrivacyRequest",
+    "PrivacyRequestEvent",
     "CommissionRule",
     "Dispute",
     "DisputeAdjustment",

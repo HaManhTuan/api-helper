@@ -13,6 +13,8 @@ from .helper_document_repository import HelperDocumentRepository, helper_documen
 from .helper_document_type_repository import HelperDocumentTypeRepository, helper_document_type_repository
 from .helper_profile_repository import HelperProfileRepository, helper_profile_repository
 from .price_book_entry_repository import PriceBookEntryRepository, price_book_entry_repository
+from .privacy_request_event_repository import PrivacyRequestEventRepository, privacy_request_event_repository
+from .privacy_request_repository import PrivacyRequestRepository, privacy_request_repository
 from .promotion_redemption_repository import PromotionRedemptionRepository, promotion_redemption_repository
 from .promotion_repository import PromotionRepository, promotion_repository
 from .service_offering_repository import ServiceOfferingRepository, service_offering_repository
@@ -32,6 +34,10 @@ __all__ = [
     "service_offering_repository",
     "PriceBookEntryRepository",
     "price_book_entry_repository",
+    "PrivacyRequestRepository",
+    "privacy_request_repository",
+    "PrivacyRequestEventRepository",
+    "privacy_request_event_repository",
     "CommissionRuleRepository",
     "commission_rule_repository",
     "HelperProfileRepository",
