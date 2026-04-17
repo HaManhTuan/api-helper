@@ -18,7 +18,7 @@ from app.schemas.users import (
 )
 from app.services.user_service import user_service
 from app.services.helper_moderation_service import helper_moderation_service
-from app.utils.auth import create_access_token, get_current_admin_user, get_current_user
+from app.utils.auth import create_access_token, get_current_admin_user, get_current_customer_user, get_current_user
 from app.utils.i18n import __
 from app.utils.tracing import get_trace_logger
 
@@ -209,3 +209,25 @@ async def get_admin_profile(
         deleted_at=current_user.deleted_at,
     )
     return ResponseBuilder.success(message="Admin profile retrieved", data=user_profile)
+
+
+@protected_router.get("/customer/me", response_model=SuccessResponse[UserProfileResponse])  # type: ignore[misc]
+async def get_customer_profile(
+    current_user: User = Depends(get_current_customer_user),
+) -> SuccessResponse[UserProfileResponse]:
+    """
+    Validate customer access and return current customer profile.
+    This endpoint enforces suspended/inactive customer blocking with structured 403.
+    """
+    user_profile = UserProfileResponse(
+        id=current_user.id,
+        role=current_user.role,
+        email=current_user.email,
+        phone=current_user.phone,
+        status=current_user.status,
+        last_login_at=current_user.last_login_at,
+        created_at=current_user.created_at,
+        updated_at=current_user.updated_at,
+        deleted_at=current_user.deleted_at,
+    )
+    return ResponseBuilder.success(message="Customer profile retrieved", data=user_profile)

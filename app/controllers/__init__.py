@@ -23,59 +23,41 @@ from app.controllers import (
 # Main API router using custom router
 api_router = CustomAPIRouter()
 
-# Include sub-routers
-# System routers (auth, health, language) - placed at top
-api_router.include_router(health_controller.router, tags=["Health"])
-# Language routes
-api_router.include_router(language_controller.router, prefix=f"{API_V1_PREFIX}/language", tags=["Language"])
-# Public auth routes (login, register)
-api_router.include_router(auth_controller.public_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Authentication"])
-# Protected auth routes (profile)
-api_router.include_router(
-    auth_controller.protected_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Authentication"], requires_auth=True
-)
-api_router.include_router(
-    analytics_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Analytics"], requires_auth=True
-)
-api_router.include_router(
-    admin_customer_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Customers"], requires_auth=True
-)
-api_router.include_router(
-    content_policy_controller.admin_router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Content"], requires_auth=True
-)
-api_router.include_router(
-    staff_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Staff"], requires_auth=True
-)
-api_router.include_router(
-    insurance_risk_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Insurance"], requires_auth=True
-)
-api_router.include_router(
-    booking_operations_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Booking Ops"], requires_auth=True
-)
-api_router.include_router(
-    dispute_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Disputes"], requires_auth=True
-)
-api_router.include_router(
-    helper_moderation_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Helper Moderation"], requires_auth=True
-)
-api_router.include_router(
-    pricing_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Pricing"], requires_auth=True
-)
-api_router.include_router(
-    payout_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Payouts"], requires_auth=True
-)
-api_router.include_router(
-    promotion_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Promotions"], requires_auth=True
-)
-api_router.include_router(
-    review_moderation_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Reviews"], requires_auth=True
-)
-api_router.include_router(
-    tax_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Tax"], requires_auth=True
-)
-api_router.include_router(
-    helper_kyc_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Helper KYC"], requires_auth=True
-)
-api_router.include_router(
-    content_policy_controller.public_router, prefix=f"{API_V1_PREFIX}", tags=["Public Content"]
-)
+def _include_system_routes() -> None:
+    api_router.include_router(health_controller.router, tags=["Health"])
+    api_router.include_router(language_controller.router, prefix=f"{API_V1_PREFIX}/language", tags=["Language"])
+    api_router.include_router(auth_controller.public_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Authentication"])
+    api_router.include_router(
+        auth_controller.protected_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Authentication"], requires_auth=True
+    )
+
+
+def _include_admin_routes() -> None:
+    admin_prefix = f"{API_V1_PREFIX}/admin"
+    admin_routes = [
+        (analytics_controller.router, "Admin Analytics"),
+        (admin_customer_controller.router, "Admin Customers"),
+        (content_policy_controller.admin_router, "Admin Content"),
+        (staff_controller.router, "Admin Staff"),
+        (insurance_risk_controller.router, "Admin Insurance"),
+        (booking_operations_controller.router, "Admin Booking Ops"),
+        (dispute_controller.router, "Admin Disputes"),
+        (helper_moderation_controller.router, "Admin Helper Moderation"),
+        (pricing_controller.router, "Admin Pricing"),
+        (payout_controller.router, "Admin Payouts"),
+        (promotion_controller.router, "Admin Promotions"),
+        (review_moderation_controller.router, "Admin Reviews"),
+        (tax_controller.router, "Admin Tax"),
+    ]
+    for router, tag in admin_routes:
+        api_router.include_router(router, prefix=admin_prefix, tags=[tag], requires_auth=True)
+
+
+def _include_helper_and_public_routes() -> None:
+    api_router.include_router(helper_kyc_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Helper KYC"], requires_auth=True)
+    api_router.include_router(content_policy_controller.public_router, prefix=f"{API_V1_PREFIX}", tags=["Public Content"])
+
+
+_include_system_routes()
+_include_admin_routes()
+_include_helper_and_public_routes()
