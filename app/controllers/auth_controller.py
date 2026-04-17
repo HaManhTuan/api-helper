@@ -17,6 +17,7 @@ from app.schemas.users import (
     convert_user_update_request_to_internal,
 )
 from app.services.user_service import user_service
+from app.services.helper_moderation_service import helper_moderation_service
 from app.utils.auth import create_access_token, get_current_admin_user, get_current_user
 from app.utils.i18n import __
 from app.utils.tracing import get_trace_logger
@@ -108,6 +109,9 @@ async def register(
         db=db,
         user_data=internal_user_data,
     )
+    if user.role == "helper":
+        await helper_moderation_service.ensure_helper_profile(db, user)
+        await db.commit()
 
     # Create access token
     access_token_expires = timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)

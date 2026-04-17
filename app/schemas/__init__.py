@@ -48,6 +48,20 @@ from .pricing import (  # Catalog/pricing/commission snapshots
 # Tax/VAT schemas
 from .tax import TaxConfigResponse, TaxConfigUpsertRequest, TaxRuleResponse, TaxRuleUpsertRequest
 from .promotions import PromotionPerformanceResponse, PromotionRedeemPreviewRequest, PromotionResponse, PromotionUpsertRequest
+from .helpers import (
+    HelperDocumentResponse,
+    HelperDocumentReviewRequest,
+    HelperDocumentSubmitRequest,
+    HelperDocumentTypeResponse,
+    HelperDocumentTypeUpsertRequest,
+    HelperDocumentUploadIntentRequest,
+    HelperDocumentUploadIntentResponse,
+    HelperEligibilityResponse,
+    HelperModerationActionRequest,
+    HelperModerationDetailResponse,
+    HelperProfileResponse,
+    HelperProfileUpsertRequest,
+)
 
 __all__ = [
     # Common
@@ -92,4 +106,17 @@ __all__ = [
     "PromotionRedeemPreviewRequest",
     "PromotionResponse",
     "PromotionPerformanceResponse",
+    # Helpers moderation/KYC
+    "HelperDocumentTypeUpsertRequest",
+    "HelperDocumentUploadIntentRequest",
+    "HelperDocumentSubmitRequest",
+    "HelperDocumentReviewRequest",
+    "HelperModerationActionRequest",
+    "HelperProfileUpsertRequest",
+    "HelperProfileResponse",
+    "HelperModerationDetailResponse",
+    "HelperDocumentTypeResponse",
+    "HelperDocumentResponse",
+    "HelperDocumentUploadIntentResponse",
+    "HelperEligibilityResponse",
 ]

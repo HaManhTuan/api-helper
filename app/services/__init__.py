@@ -7,6 +7,7 @@ providing business logic and orchestration between repositories and controllers.
 
 from app.services.pricing_service import PricingService, pricing_service
 from app.services.promotion_service import PromotionService, promotion_service
+from app.services.helper_moderation_service import HelperModerationService, helper_moderation_service
 from app.services.staff_service import StaffService, staff_service
 from app.services.tax_service import TaxService, tax_service
 from app.services.user_service import UserService, user_service
@@ -18,6 +19,8 @@ __all__ = [
     "staff_service",
     "PricingService",
     "pricing_service",
+    "HelperModerationService",
+    "helper_moderation_service",
     "PromotionService",
     "promotion_service",
     "TaxService",

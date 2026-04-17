@@ -25,6 +25,7 @@ from app.config.staff_rbac import COMMON_PERMISSIONS, COMMON_ROLES
 from app.models.permission import Permission
 from app.models.role import Role
 from app.models.role_permission import RolePermission
+from app.models.helper_document_type import HelperDocumentType
 from app.models.tax_rule import TaxRule
 from app.models.user import User
 from app.utils.logger import get_logger
@@ -57,6 +58,7 @@ def init_db() -> None:
     try:
         role_by_code = _seed_common_roles_permissions(db)
         _seed_default_tax_rule(db)
+        _seed_default_helper_document_types(db)
 
         # Check if we have any users
         user_count = db.query(User).count()
@@ -161,6 +163,33 @@ def _seed_default_tax_rule(db) -> None:
     db.add(rule)
     db.commit()
     logger.info("Seeded default tax rule (VAT 10% inclusive, commission base before_vat)")
+
+
+def _seed_default_helper_document_types(db) -> None:
+    defaults = [
+        {"code": "citizen_id", "name": "Citizen ID", "required": True, "sort_order": 10},
+        {"code": "portrait", "name": "Portrait Photo", "required": True, "sort_order": 20},
+        {"code": "health_certificate", "name": "Health Certificate", "required": False, "sort_order": 30},
+    ]
+    for item in defaults:
+        existing = (
+            db.query(HelperDocumentType)
+            .filter(HelperDocumentType.code == item["code"], HelperDocumentType.deleted_at.is_(None))
+            .first()
+        )
+        if existing:
+            continue
+        db.add(
+            HelperDocumentType(
+                code=item["code"],
+                name=item["name"],
+                required=item["required"],
+                active=True,
+                sort_order=item["sort_order"],
+            )
+        )
+    db.commit()
+    logger.info("Seeded default helper document types")
 
 
 if __name__ == "__main__":

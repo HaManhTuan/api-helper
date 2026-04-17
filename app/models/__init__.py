@@ -10,6 +10,9 @@ from app.models.base_model import BaseModel
 from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
+from app.models.helper_document import HelperDocument
+from app.models.helper_document_type import HelperDocumentType
+from app.models.helper_profile import HelperProfile
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
 from app.models.promotion import Promotion
@@ -31,6 +34,9 @@ __all__ = [
     "ServiceOffering",
     "PriceBookEntry",
     "CommissionRule",
+    "HelperProfile",
+    "HelperDocumentType",
+    "HelperDocument",
     "Promotion",
     "PromotionRedemption",
     "BookingFinancialSnapshot",

@@ -3,6 +3,8 @@ from app.config.custom_router import APIRouter as CustomAPIRouter
 from app.controllers import (
     auth_controller,
     health_controller,
+    helper_kyc_controller,
+    helper_moderation_controller,
     language_controller,
     pricing_controller,
     promotion_controller,
@@ -28,6 +30,9 @@ api_router.include_router(
     staff_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Staff"], requires_auth=True
 )
 api_router.include_router(
+    helper_moderation_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Helper Moderation"], requires_auth=True
+)
+api_router.include_router(
     pricing_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Pricing"], requires_auth=True
 )
 api_router.include_router(
@@ -35,4 +40,7 @@ api_router.include_router(
 )
 api_router.include_router(
     tax_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Tax"], requires_auth=True
+)
+api_router.include_router(
+    helper_kyc_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Helper KYC"], requires_auth=True
 )
