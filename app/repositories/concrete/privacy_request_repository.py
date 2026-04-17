@@ -25,5 +25,15 @@ class PrivacyRequestRepository(RepositoryImpl[PrivacyRequest]):
         )
         return list(result.scalars().all())
 
+    async def get_by_id_and_customer(self, db: AsyncSession, request_id: str, customer_id: str) -> PrivacyRequest | None:
+        result = await db.execute(
+            select(PrivacyRequest).where(
+                PrivacyRequest.deleted_at.is_(None),
+                PrivacyRequest.id == request_id,
+                PrivacyRequest.customer_id == customer_id,
+            )
+        )
+        return result.scalar_one_or_none()
+
 
 privacy_request_repository = PrivacyRequestRepository()

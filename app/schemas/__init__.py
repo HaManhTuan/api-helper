@@ -104,6 +104,7 @@ from .customer_portal import (
     SavedAddressResponse,
     SavedAddressUpdateRequest,
 )
+from .customer_privacy import CustomerPrivacyRequestCreateRequest, CustomerPrivacyRequestResponse
 from .payouts import (
     PayoutBatchDetailResponse,
     PayoutBatchGenerateRequest,
@@ -214,6 +215,9 @@ __all__ = [
     "SavedAddressUpdateRequest",
     "CustomerPortalProfileResponse",
     "SavedAddressResponse",
+    # Customer privacy requests
+    "CustomerPrivacyRequestCreateRequest",
+    "CustomerPrivacyRequestResponse",
     # Payouts and settlement
     "PayoutBatchGenerateRequest",
     "PayoutBatchMarkPaidRequest",
