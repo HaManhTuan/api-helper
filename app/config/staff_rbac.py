@@ -9,6 +9,7 @@ from typing import Dict, List
 COMMON_PERMISSIONS: List[str] = [
     "staff:manage",
     "users:read",
+    "users:privacy",
     "bookings:read:all",
     "bookings:assign",
     "pricing:write",
@@ -33,6 +34,7 @@ COMMON_ROLES: Dict[str, Dict[str, object]] = {
         "description": "Booking operations and customer support workflows.",
         "permissions": [
             "users:read",
+            "users:privacy",
             "bookings:read:all",
             "bookings:assign",
             "helpers:moderate",

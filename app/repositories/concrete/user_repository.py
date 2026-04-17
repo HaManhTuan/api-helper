@@ -1,6 +1,7 @@
-from typing import List, Optional
+from datetime import datetime
+from typing import List, Optional, Tuple
 
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
@@ -62,6 +63,69 @@ class UserRepository(RepositoryImpl[User]):
         )
         result = await db.execute(stmt)
         return [code for code in result.scalars().all()]
+
+    async def list_customers_paginated(
+        self,
+        db: AsyncSession,
+        *,
+        page: int,
+        page_size: int,
+        search: Optional[str] = None,
+        status: Optional[str] = None,
+    ) -> Tuple[List[User], int]:
+        base_filters = [User.deleted_at.is_(None), User.role == "customer"]
+        if status:
+            base_filters.append(User.status == status)
+        if search:
+            keyword = f"%{search.strip()}%"
+            base_filters.append(
+                or_(
+                    User.email.ilike(keyword),
+                    User.phone.ilike(keyword),
+                    User.identifier.ilike(keyword),
+                )
+            )
+
+        count_stmt = select(func.count()).select_from(User).where(*base_filters)
+        total = int((await db.execute(count_stmt)).scalar_one() or 0)
+
+        stmt = (
+            select(User)
+            .where(*base_filters)
+            .order_by(User.created_at.desc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
+        )
+        result = await db.execute(stmt)
+        return list(result.scalars().all()), total
+
+    async def count_customer_bookings(self, db: AsyncSession, *, customer_id: str) -> dict:
+        from app.models.booking import Booking
+
+        rows = await db.execute(
+            select(Booking.status, func.count())
+            .where(Booking.deleted_at.is_(None), Booking.customer_id == customer_id)
+            .group_by(Booking.status)
+        )
+        counters = {status: int(total) for status, total in rows.all()}
+        counters["total"] = sum(counters.values())
+        return counters
+
+    async def set_customer_status(
+        self,
+        db: AsyncSession,
+        *,
+        customer_id: str,
+        new_status: str,
+        expected_updated_at: Optional[datetime] = None,
+    ) -> User:
+        payload = {"status": new_status}
+        return await self.update_with_optimistic_lock(
+            db=db,
+            id=customer_id,
+            obj_in=payload,
+            expected_updated_at=expected_updated_at.isoformat() if expected_updated_at else None,
+        )
 
 
 # Create instance for dependency injection

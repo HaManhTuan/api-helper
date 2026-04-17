@@ -65,7 +65,7 @@ async def login_for_access_token(
         )
 
     # Check if user is active
-    if not user.is_active:
+    if not user.is_active or user.status != "active":
         logger.warning(f"Login attempt for inactive user: {login_data.identifier}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
