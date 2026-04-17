@@ -69,6 +69,13 @@ from .bookings import (
     AdminReassignBookingRequest,
     BookingResponse,
 )
+from .disputes import (
+    DisputeAdjustmentCreateRequest,
+    DisputeAdjustmentResponse,
+    DisputeCreateRequest,
+    DisputeResponse,
+    DisputeUpdateRequest,
+)
 
 __all__ = [
     # Common
@@ -132,4 +139,10 @@ __all__ = [
     "AdminCancelBookingRequest",
     "AdminBookingFilterRequest",
     "BookingResponse",
+    # Disputes and adjustments
+    "DisputeCreateRequest",
+    "DisputeUpdateRequest",
+    "DisputeAdjustmentCreateRequest",
+    "DisputeResponse",
+    "DisputeAdjustmentResponse",
 ]
