@@ -10,7 +10,9 @@ from app.controllers import (
     helper_moderation_controller,
     language_controller,
     pricing_controller,
+    payout_controller,
     promotion_controller,
+    review_moderation_controller,
     staff_controller,
     tax_controller,
 )
@@ -48,7 +50,13 @@ api_router.include_router(
     pricing_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Pricing"], requires_auth=True
 )
 api_router.include_router(
+    payout_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Payouts"], requires_auth=True
+)
+api_router.include_router(
     promotion_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Promotions"], requires_auth=True
+)
+api_router.include_router(
+    review_moderation_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Reviews"], requires_auth=True
 )
 api_router.include_router(
     tax_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Tax"], requires_auth=True

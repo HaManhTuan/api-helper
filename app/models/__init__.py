@@ -18,12 +18,15 @@ from app.models.helper_document_type import HelperDocumentType
 from app.models.helper_profile import HelperProfile
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
+from app.models.payout_batch import PayoutBatch
+from app.models.payout_line import PayoutLine
 from app.models.privacy_request import PrivacyRequest
 from app.models.privacy_request_event import PrivacyRequestEvent
 from app.models.promotion import Promotion
 from app.models.promotion_redemption import PromotionRedemption
 from app.models.role import Role
 from app.models.role_permission import RolePermission
+from app.models.review import Review
 from app.models.service_offering import ServiceOffering
 from app.models.staff_audit_log import StaffAuditLog
 from app.models.tax_config import TaxConfig
@@ -35,10 +38,13 @@ __all__ = [
     "Role",
     "Permission",
     "RolePermission",
+    "Review",
     "StaffAuditLog",
     "ServiceOffering",
     "Booking",
     "PriceBookEntry",
+    "PayoutBatch",
+    "PayoutLine",
     "PrivacyRequest",
     "PrivacyRequestEvent",
     "CommissionRule",
