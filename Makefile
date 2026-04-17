@@ -40,7 +40,7 @@ endef
 	sh-app sh-db sh-redis app test test-cov lint precommit fmt migrate-up migrate-down \
 	migrate-create migrate-history migrate-current migrate-up-local migrate-down-local \
 	migrate-create-local migrate-history-local migrate-current-local db-init db-init-local \
-	worker stop prune
+	worker stop prune prod-config prod-build prod-up prod-down prod-logs prod-deploy
 
 help: ## Show all available commands
 	@printf "$(CYAN)$(BOLD)API Helper - Developer Makefile$(RESET)\n\n"
@@ -156,3 +156,22 @@ stop: env-check ## Stop services without removing containers
 
 prune: ## Clean dangling docker artifacts (safe cleanup)
 	@docker system prune -f
+
+prod-config: ## Validate production docker compose config
+	@docker compose --env-file .env.prod -f docker-compose.prod.yml config >/dev/null
+	$(call print_success,Production docker compose config is valid.)
+
+prod-build: ## Build production docker images
+	@docker compose --env-file .env.prod -f docker-compose.prod.yml build
+
+prod-up: ## Start production stack in detached mode
+	@docker compose --env-file .env.prod -f docker-compose.prod.yml up -d
+
+prod-down: ## Stop production stack
+	@docker compose --env-file .env.prod -f docker-compose.prod.yml down
+
+prod-logs: ## Tail logs from production stack
+	@docker compose --env-file .env.prod -f docker-compose.prod.yml logs -f --tail=200
+
+prod-deploy: ## Build, start, migrate, and seed production stack
+	@ENV_FILE=.env.prod COMPOSE_FILE=docker-compose.prod.yml ./scripts/deploy.sh
