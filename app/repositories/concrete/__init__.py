@@ -7,11 +7,15 @@ providing model-specific database operations and business logic.
 
 from .booking_repository import BookingRepository, booking_repository
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
+from .content_block_repository import ContentBlockRepository, content_block_repository
 from .dispute_adjustment_repository import DisputeAdjustmentRepository, dispute_adjustment_repository
 from .dispute_repository import DisputeRepository, dispute_repository
 from .helper_document_repository import HelperDocumentRepository, helper_document_repository
 from .helper_document_type_repository import HelperDocumentTypeRepository, helper_document_type_repository
 from .helper_profile_repository import HelperProfileRepository, helper_profile_repository
+from .insurance_claim_repository import InsuranceClaimRepository, insurance_claim_repository
+from .insurance_enrollment_repository import InsuranceEnrollmentRepository, insurance_enrollment_repository
+from .insurance_product_repository import InsuranceProductRepository, insurance_product_repository
 from .price_book_entry_repository import PriceBookEntryRepository, price_book_entry_repository
 from .payout_batch_repository import PayoutBatchRepository, payout_batch_repository
 from .payout_line_repository import PayoutLineRepository, payout_line_repository
@@ -29,6 +33,8 @@ __all__ = [
     "user_repository",
     "BookingRepository",
     "booking_repository",
+    "ContentBlockRepository",
+    "content_block_repository",
     "DisputeRepository",
     "dispute_repository",
     "DisputeAdjustmentRepository",
@@ -49,6 +55,12 @@ __all__ = [
     "commission_rule_repository",
     "HelperProfileRepository",
     "helper_profile_repository",
+    "InsuranceProductRepository",
+    "insurance_product_repository",
+    "InsuranceEnrollmentRepository",
+    "insurance_enrollment_repository",
+    "InsuranceClaimRepository",
+    "insurance_claim_repository",
     "HelperDocumentTypeRepository",
     "helper_document_type_repository",
     "HelperDocumentRepository",

@@ -11,11 +11,15 @@ from app.models.booking import Booking
 from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
+from app.models.content_block import ContentBlock
 from app.models.dispute import Dispute
 from app.models.dispute_adjustment import DisputeAdjustment
 from app.models.helper_document import HelperDocument
 from app.models.helper_document_type import HelperDocumentType
 from app.models.helper_profile import HelperProfile
+from app.models.insurance_claim import InsuranceClaim
+from app.models.insurance_enrollment import InsuranceEnrollment
+from app.models.insurance_product import InsuranceProduct
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
 from app.models.payout_batch import PayoutBatch
@@ -48,9 +52,13 @@ __all__ = [
     "PrivacyRequest",
     "PrivacyRequestEvent",
     "CommissionRule",
+    "ContentBlock",
     "Dispute",
     "DisputeAdjustment",
     "HelperProfile",
+    "InsuranceProduct",
+    "InsuranceEnrollment",
+    "InsuranceClaim",
     "HelperDocumentType",
     "HelperDocument",
     "Promotion",

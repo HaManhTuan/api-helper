@@ -100,6 +100,18 @@ from .reviews import (
     ReviewModerationFilterRequest,
     ReviewModerationResponse,
 )
+from .content import ContentBlockResponse, ContentBlockUpsertRequest
+from .insurance import (
+    InsuranceClaimCreateRequest,
+    InsuranceClaimResponse,
+    InsuranceClaimUpdateRequest,
+    InsuranceEnrollmentResponse,
+    InsuranceEnrollmentUpsertRequest,
+    InsuranceProductResponse,
+    InsuranceProductUpsertRequest,
+    ServiceInsuranceRuleResponse,
+    ServiceInsuranceRuleUpdateRequest,
+)
 
 __all__ = [
     # Common
@@ -190,4 +202,17 @@ __all__ = [
     "ReviewAggregateOverrideRequest",
     "ReviewModerationResponse",
     "HelperAggregateResponse",
+    # Content policy
+    "ContentBlockUpsertRequest",
+    "ContentBlockResponse",
+    # Insurance and risk
+    "InsuranceProductUpsertRequest",
+    "InsuranceEnrollmentUpsertRequest",
+    "InsuranceClaimCreateRequest",
+    "InsuranceClaimUpdateRequest",
+    "ServiceInsuranceRuleUpdateRequest",
+    "InsuranceProductResponse",
+    "InsuranceEnrollmentResponse",
+    "InsuranceClaimResponse",
+    "ServiceInsuranceRuleResponse",
 ]
