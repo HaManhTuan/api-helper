@@ -6,6 +6,9 @@ providing model-specific database operations and business logic.
 """
 
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
+from .helper_document_repository import HelperDocumentRepository, helper_document_repository
+from .helper_document_type_repository import HelperDocumentTypeRepository, helper_document_type_repository
+from .helper_profile_repository import HelperProfileRepository, helper_profile_repository
 from .price_book_entry_repository import PriceBookEntryRepository, price_book_entry_repository
 from .promotion_redemption_repository import PromotionRedemptionRepository, promotion_redemption_repository
 from .promotion_repository import PromotionRepository, promotion_repository
@@ -22,6 +25,12 @@ __all__ = [
     "price_book_entry_repository",
     "CommissionRuleRepository",
     "commission_rule_repository",
+    "HelperProfileRepository",
+    "helper_profile_repository",
+    "HelperDocumentTypeRepository",
+    "helper_document_type_repository",
+    "HelperDocumentRepository",
+    "helper_document_repository",
     "PromotionRepository",
     "promotion_repository",
     "PromotionRedemptionRepository",

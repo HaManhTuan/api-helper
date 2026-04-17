@@ -72,6 +72,8 @@ class User(BaseModel):
 
     # Relationships
     staff_role = relationship("Role", back_populates="users")
+    helper_profile = relationship("HelperProfile", foreign_keys="HelperProfile.user_id", uselist=False, back_populates="user")
+    helper_documents = relationship("HelperDocument", foreign_keys="HelperDocument.helper_id", back_populates="helper")
 
     def __repr__(self) -> str:
         """String representation"""
