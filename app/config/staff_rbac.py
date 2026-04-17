@@ -14,6 +14,7 @@ COMMON_PERMISSIONS: List[str] = [
     "bookings:assign",
     "pricing:write",
     "helpers:moderate",
+    "reviews:moderate",
     "kyc:review",
     "disputes:manage",
     "adjustments:manage",
@@ -40,6 +41,7 @@ COMMON_ROLES: Dict[str, Dict[str, object]] = {
             "bookings:read:all",
             "bookings:assign",
             "helpers:moderate",
+            "reviews:moderate",
             "kyc:review",
             "disputes:manage",
             "adjustments:manage",
@@ -53,7 +55,7 @@ COMMON_ROLES: Dict[str, Dict[str, object]] = {
     "support": {
         "name": "Support",
         "description": "Read-focused operational support access.",
-        "permissions": ["users:read", "bookings:read:all"],
+        "permissions": ["users:read", "bookings:read:all", "reviews:moderate"],
     },
     "readonly": {
         "name": "Read Only",

@@ -93,6 +93,13 @@ from .payouts import (
     PayoutExportResponse,
     PayoutLineResponse,
 )
+from .reviews import (
+    HelperAggregateResponse,
+    ReviewAggregateOverrideRequest,
+    ReviewModerationActionRequest,
+    ReviewModerationFilterRequest,
+    ReviewModerationResponse,
+)
 
 __all__ = [
     # Common
@@ -177,4 +184,10 @@ __all__ = [
     "PayoutBatchResponse",
     "PayoutBatchDetailResponse",
     "PayoutExportResponse",
+    # Reviews moderation
+    "ReviewModerationFilterRequest",
+    "ReviewModerationActionRequest",
+    "ReviewAggregateOverrideRequest",
+    "ReviewModerationResponse",
+    "HelperAggregateResponse",
 ]

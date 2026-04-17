@@ -19,6 +19,7 @@ from .privacy_request_event_repository import PrivacyRequestEventRepository, pri
 from .privacy_request_repository import PrivacyRequestRepository, privacy_request_repository
 from .promotion_redemption_repository import PromotionRedemptionRepository, promotion_redemption_repository
 from .promotion_repository import PromotionRepository, promotion_repository
+from .review_repository import ReviewRepository, review_repository
 from .service_offering_repository import ServiceOfferingRepository, service_offering_repository
 from .tax_rule_repository import TaxRuleRepository, tax_rule_repository
 from .user_repository import UserRepository, user_repository
@@ -56,6 +57,8 @@ __all__ = [
     "promotion_repository",
     "PromotionRedemptionRepository",
     "promotion_redemption_repository",
+    "ReviewRepository",
+    "review_repository",
     "TaxRuleRepository",
     "tax_rule_repository",
 ]
