@@ -11,6 +11,8 @@ from app.models.booking import Booking
 from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
+from app.models.dispute import Dispute
+from app.models.dispute_adjustment import DisputeAdjustment
 from app.models.helper_document import HelperDocument
 from app.models.helper_document_type import HelperDocumentType
 from app.models.helper_profile import HelperProfile
@@ -36,6 +38,8 @@ __all__ = [
     "Booking",
     "PriceBookEntry",
     "CommissionRule",
+    "Dispute",
+    "DisputeAdjustment",
     "HelperProfile",
     "HelperDocumentType",
     "HelperDocument",
