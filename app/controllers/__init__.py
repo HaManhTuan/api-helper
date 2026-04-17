@@ -10,6 +10,7 @@ from app.controllers import (
     helper_kyc_controller,
     helper_moderation_controller,
     content_policy_controller,
+    customer_privacy_controller,
     customer_profile_controller,
     insurance_risk_controller,
     language_controller,
@@ -58,6 +59,9 @@ def _include_helper_and_public_routes() -> None:
     api_router.include_router(helper_kyc_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Helper KYC"], requires_auth=True)
     api_router.include_router(
         customer_profile_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Customer Profile"], requires_auth=True
+    )
+    api_router.include_router(
+        customer_privacy_controller.router, prefix=f"{API_V1_PREFIX}", tags=["Customer Privacy"], requires_auth=True
     )
     api_router.include_router(content_policy_controller.public_router, prefix=f"{API_V1_PREFIX}", tags=["Public Content"])
 

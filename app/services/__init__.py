@@ -8,6 +8,7 @@ providing business logic and orchestration between repositories and controllers.
 from app.services.pricing_service import PricingService, pricing_service
 from app.services.analytics_service import AnalyticsService, analytics_service
 from app.services.admin_customer_service import AdminCustomerService, admin_customer_service
+from app.services.customer_privacy_service import CustomerPrivacyService, customer_privacy_service
 from app.services.customer_profile_service import CustomerProfileService, customer_profile_service
 from app.services.promotion_service import PromotionService, promotion_service
 from app.services.helper_moderation_service import HelperModerationService, helper_moderation_service
@@ -32,6 +33,8 @@ __all__ = [
     "analytics_service",
     "AdminCustomerService",
     "admin_customer_service",
+    "CustomerPrivacyService",
+    "customer_privacy_service",
     "CustomerProfileService",
     "customer_profile_service",
     "BookingOperationsService",
