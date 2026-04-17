@@ -21,4 +21,5 @@ class ServiceOffering(BaseModel):
 
     price_book_entries = relationship("PriceBookEntry", back_populates="service_offering", cascade="all, delete-orphan")
     commission_rules = relationship("CommissionRule", back_populates="service_offering", cascade="all, delete-orphan")
+    promotions = relationship("Promotion", back_populates="service_offering")
 

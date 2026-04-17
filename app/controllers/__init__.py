@@ -1,6 +1,14 @@
 from app.config.constants import API_V1_PREFIX
 from app.config.custom_router import APIRouter as CustomAPIRouter
-from app.controllers import auth_controller, health_controller, language_controller, pricing_controller, staff_controller, tax_controller
+from app.controllers import (
+    auth_controller,
+    health_controller,
+    language_controller,
+    pricing_controller,
+    promotion_controller,
+    staff_controller,
+    tax_controller,
+)
 
 # Main API router using custom router
 api_router = CustomAPIRouter()
@@ -21,6 +29,9 @@ api_router.include_router(
 )
 api_router.include_router(
     pricing_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Pricing"], requires_auth=True
+)
+api_router.include_router(
+    promotion_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Promotions"], requires_auth=True
 )
 api_router.include_router(
     tax_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Tax"], requires_auth=True

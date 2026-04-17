@@ -61,6 +61,10 @@ class BookingLineItemPriceRequest(BaseSchema):
 
 class BookingSnapshotComputeRequest(BaseSchema):
     booking_id: str = Field(..., min_length=1, max_length=64)
+    customer_id: str = Field(..., min_length=1, max_length=64)
     at: datetime
+    quote_id: Optional[str] = Field(default=None, min_length=1, max_length=64)
+    promotion_code: Optional[str] = Field(default=None, max_length=64)
+    surge_multiplier: float = Field(default=1.0, ge=1.0, le=5.0)
     line_items: List[BookingLineItemPriceRequest]
 

@@ -12,6 +12,8 @@ from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
+from app.models.promotion import Promotion
+from app.models.promotion_redemption import PromotionRedemption
 from app.models.role import Role
 from app.models.role_permission import RolePermission
 from app.models.service_offering import ServiceOffering
@@ -29,6 +31,8 @@ __all__ = [
     "ServiceOffering",
     "PriceBookEntry",
     "CommissionRule",
+    "Promotion",
+    "PromotionRedemption",
     "BookingFinancialSnapshot",
     "CommercialAuditLog",
     "TaxRule",

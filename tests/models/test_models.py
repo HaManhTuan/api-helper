@@ -4,6 +4,21 @@ This module is imported by the conftest.py to ensure all models are available fo
 """
 
 # Import all model classes here to ensure they're registered with Base.metadata
+from app.models import (
+    BookingFinancialSnapshot,
+    CommercialAuditLog,
+    CommissionRule,
+    Permission,
+    PriceBookEntry,
+    Promotion,
+    PromotionRedemption,
+    Role,
+    RolePermission,
+    ServiceOffering,
+    StaffAuditLog,
+    TaxConfig,
+    TaxRule,
+)
 from app.models.base_model import BaseModel
 from app.models.user import User
 
@@ -13,5 +28,17 @@ from app.models.user import User
 __all__ = [
     "BaseModel",
     "User",
-    # Add other models here
+    "Role",
+    "Permission",
+    "RolePermission",
+    "StaffAuditLog",
+    "ServiceOffering",
+    "PriceBookEntry",
+    "CommissionRule",
+    "Promotion",
+    "PromotionRedemption",
+    "BookingFinancialSnapshot",
+    "CommercialAuditLog",
+    "TaxRule",
+    "TaxConfig",
 ]

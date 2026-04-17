@@ -47,6 +47,7 @@ from .pricing import (  # Catalog/pricing/commission snapshots
 
 # Tax/VAT schemas
 from .tax import TaxConfigResponse, TaxConfigUpsertRequest, TaxRuleResponse, TaxRuleUpsertRequest
+from .promotions import PromotionPerformanceResponse, PromotionRedeemPreviewRequest, PromotionResponse, PromotionUpsertRequest
 
 __all__ = [
     # Common
@@ -86,4 +87,9 @@ __all__ = [
     "TaxRuleResponse",
     "TaxConfigUpsertRequest",
     "TaxConfigResponse",
+    # Promotions
+    "PromotionUpsertRequest",
+    "PromotionRedeemPreviewRequest",
+    "PromotionResponse",
+    "PromotionPerformanceResponse",
 ]

@@ -7,6 +7,8 @@ providing model-specific database operations and business logic.
 
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
 from .price_book_entry_repository import PriceBookEntryRepository, price_book_entry_repository
+from .promotion_redemption_repository import PromotionRedemptionRepository, promotion_redemption_repository
+from .promotion_repository import PromotionRepository, promotion_repository
 from .service_offering_repository import ServiceOfferingRepository, service_offering_repository
 from .tax_rule_repository import TaxRuleRepository, tax_rule_repository
 from .user_repository import UserRepository, user_repository
@@ -20,6 +22,10 @@ __all__ = [
     "price_book_entry_repository",
     "CommissionRuleRepository",
     "commission_rule_repository",
+    "PromotionRepository",
+    "promotion_repository",
+    "PromotionRedemptionRepository",
+    "promotion_redemption_repository",
     "TaxRuleRepository",
     "tax_rule_repository",
 ]
