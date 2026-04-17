@@ -145,6 +145,19 @@ async def get_current_admin_user(current_user: User = Depends(get_current_user))
     return current_user
 
 
+async def get_current_customer_user(current_user: User = Depends(get_current_user)) -> User:
+    """
+    Ensure current user is a customer and not suspended.
+    """
+    if current_user.role != "customer":
+        raise ForbiddenException("Customer access is required")
+    if current_user.status == "suspended":
+        raise ForbiddenException("Customer account is suspended", details={"reason_code": "customer_suspended"})
+    if current_user.status != "active":
+        raise ForbiddenException("Customer account is inactive", details={"reason_code": "customer_inactive"})
+    return current_user
+
+
 async def get_current_internal_user(current_user: User = Depends(get_current_user)) -> User:
     """
     Ensure current user is an internal user (staff/admin) and active.
