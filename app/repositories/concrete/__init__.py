@@ -8,6 +8,7 @@ providing model-specific database operations and business logic.
 from .booking_repository import BookingRepository, booking_repository
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
 from .content_block_repository import ContentBlockRepository, content_block_repository
+from .customer_quote_repository import CustomerQuoteRepository, customer_quote_repository
 from .customer_profile_repository import CustomerProfileRepository, customer_profile_repository
 from .dispute_adjustment_repository import DisputeAdjustmentRepository, dispute_adjustment_repository
 from .dispute_repository import DisputeRepository, dispute_repository
@@ -38,6 +39,8 @@ __all__ = [
     "booking_repository",
     "ContentBlockRepository",
     "content_block_repository",
+    "CustomerQuoteRepository",
+    "customer_quote_repository",
     "CustomerProfileRepository",
     "customer_profile_repository",
     "DisputeRepository",

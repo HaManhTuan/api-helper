@@ -10,6 +10,7 @@ from app.services.analytics_service import AnalyticsService, analytics_service
 from app.services.admin_customer_service import AdminCustomerService, admin_customer_service
 from app.services.customer_privacy_service import CustomerPrivacyService, customer_privacy_service
 from app.services.customer_profile_service import CustomerProfileService, customer_profile_service
+from app.services.customer_booking_service import CustomerBookingService, customer_booking_service
 from app.services.promotion_service import PromotionService, promotion_service
 from app.services.helper_moderation_service import HelperModerationService, helper_moderation_service
 from app.services.booking_operations_service import BookingOperationsService, booking_operations_service
@@ -37,6 +38,8 @@ __all__ = [
     "customer_privacy_service",
     "CustomerProfileService",
     "customer_profile_service",
+    "CustomerBookingService",
+    "customer_booking_service",
     "BookingOperationsService",
     "booking_operations_service",
     "ContentPolicyService",

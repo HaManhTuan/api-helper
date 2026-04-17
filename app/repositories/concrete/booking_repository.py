@@ -52,5 +52,37 @@ class BookingRepository(RepositoryImpl[Booking]):
         result = await db.execute(stmt)
         return list(result.scalars().all())
 
+    async def list_by_customer(
+        self,
+        db: AsyncSession,
+        *,
+        customer_id: str,
+        status: Optional[str],
+        skip: int,
+        limit: int,
+    ) -> List[Booking]:
+        filters = [Booking.deleted_at.is_(None), Booking.customer_id == customer_id]
+        if status:
+            filters.append(Booking.status == status)
+        stmt = (
+            select(Booking)
+            .where(and_(*filters))
+            .order_by(Booking.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        )
+        result = await db.execute(stmt)
+        return list(result.scalars().all())
+
+    async def get_by_id_and_customer(self, db: AsyncSession, booking_id: str, customer_id: str) -> Booking | None:
+        row = await db.execute(
+            select(Booking).where(
+                Booking.deleted_at.is_(None),
+                Booking.id == booking_id,
+                Booking.customer_id == customer_id,
+            )
+        )
+        return row.scalar_one_or_none()
+
 
 booking_repository = BookingRepository()

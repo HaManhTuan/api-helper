@@ -105,6 +105,13 @@ from .customer_portal import (
     SavedAddressUpdateRequest,
 )
 from .customer_privacy import CustomerPrivacyRequestCreateRequest, CustomerPrivacyRequestResponse
+from .customer_booking import (
+    CustomerBookingCancelRequest,
+    CustomerBookingCreateRequest,
+    CustomerBookingDetailResponse,
+    CustomerQuoteRequest,
+    CustomerQuoteResponse,
+)
 from .payouts import (
     PayoutBatchDetailResponse,
     PayoutBatchGenerateRequest,
@@ -218,6 +225,12 @@ __all__ = [
     # Customer privacy requests
     "CustomerPrivacyRequestCreateRequest",
     "CustomerPrivacyRequestResponse",
+    # Customer bookings
+    "CustomerQuoteRequest",
+    "CustomerBookingCreateRequest",
+    "CustomerBookingCancelRequest",
+    "CustomerQuoteResponse",
+    "CustomerBookingDetailResponse",
     # Payouts and settlement
     "PayoutBatchGenerateRequest",
     "PayoutBatchMarkPaidRequest",

@@ -12,6 +12,7 @@ from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
 from app.models.content_block import ContentBlock
+from app.models.customer_quote import CustomerQuote
 from app.models.customer_profile import CustomerProfile
 from app.models.dispute import Dispute
 from app.models.dispute_adjustment import DisputeAdjustment
@@ -48,6 +49,7 @@ __all__ = [
     "ReportExportJob",
     "Review",
     "CustomerProfile",
+    "CustomerQuote",
     "SavedAddress",
     "StaffAuditLog",
     "ServiceOffering",
