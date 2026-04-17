@@ -18,6 +18,8 @@ from app.models.helper_document_type import HelperDocumentType
 from app.models.helper_profile import HelperProfile
 from app.models.permission import Permission
 from app.models.price_book_entry import PriceBookEntry
+from app.models.payout_batch import PayoutBatch
+from app.models.payout_line import PayoutLine
 from app.models.privacy_request import PrivacyRequest
 from app.models.privacy_request_event import PrivacyRequestEvent
 from app.models.promotion import Promotion
@@ -39,6 +41,8 @@ __all__ = [
     "ServiceOffering",
     "Booking",
     "PriceBookEntry",
+    "PayoutBatch",
+    "PayoutLine",
     "PrivacyRequest",
     "PrivacyRequestEvent",
     "CommissionRule",

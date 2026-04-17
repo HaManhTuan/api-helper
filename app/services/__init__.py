@@ -11,6 +11,7 @@ from app.services.promotion_service import PromotionService, promotion_service
 from app.services.helper_moderation_service import HelperModerationService, helper_moderation_service
 from app.services.booking_operations_service import BookingOperationsService, booking_operations_service
 from app.services.dispute_service import DisputeService, dispute_service
+from app.services.payout_service import PayoutService, payout_service
 from app.services.staff_service import StaffService, staff_service
 from app.services.tax_service import TaxService, tax_service
 from app.services.user_service import UserService, user_service
@@ -28,6 +29,8 @@ __all__ = [
     "booking_operations_service",
     "DisputeService",
     "dispute_service",
+    "PayoutService",
+    "payout_service",
     "HelperModerationService",
     "helper_moderation_service",
     "PromotionService",

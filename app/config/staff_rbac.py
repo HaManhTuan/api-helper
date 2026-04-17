@@ -18,7 +18,9 @@ COMMON_PERMISSIONS: List[str] = [
     "disputes:manage",
     "adjustments:manage",
     "payouts:read",
+    "payouts:generate",
     "payouts:approve",
+    "payouts:mark_paid",
     "audit:read",
     "reports:export",
 ]
@@ -46,7 +48,7 @@ COMMON_ROLES: Dict[str, Dict[str, object]] = {
     "finance": {
         "name": "Finance",
         "description": "Payout and financial approval operations.",
-        "permissions": ["payouts:read", "payouts:approve", "reports:export"],
+        "permissions": ["payouts:read", "payouts:generate", "payouts:approve", "payouts:mark_paid", "reports:export"],
     },
     "support": {
         "name": "Support",
