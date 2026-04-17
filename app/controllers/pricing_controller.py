@@ -162,6 +162,7 @@ async def compute_booking_snapshot(
             customer_total=int(snap.customer_total),
             subtotal_before_tax=int(snap.subtotal_before_tax),
             tax_total=int(snap.tax_total),
+            promotion_total=int(snap.promotion_total),
             helper_total=int(snap.helper_total),
             platform_total=int(snap.platform_total),
             line_items=[BookingLineItemBreakdownResponse(**li) for li in snap.line_items],  # type: ignore[arg-type]

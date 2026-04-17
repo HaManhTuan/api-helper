@@ -16,6 +16,7 @@ class BookingFinancialSnapshot(BaseModel):
     customer_total = Column(Integer, nullable=False)
     subtotal_before_tax = Column(Integer, nullable=False, default=0)
     tax_total = Column(Integer, nullable=False, default=0)
+    promotion_total = Column(Integer, nullable=False, default=0)
     helper_total = Column(Integer, nullable=False)
     platform_total = Column(Integer, nullable=False)
 

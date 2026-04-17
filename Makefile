@@ -13,6 +13,29 @@ PYTHON ?= $(POETRY) run python
 
 .DEFAULT_GOAL := help
 
+RESET  := \033[0m
+BOLD   := \033[1m
+CYAN   := \033[36m
+GREEN  := \033[32m
+YELLOW := \033[33m
+RED    := \033[31m
+
+define print_info
+	@printf "$(CYAN)$(BOLD)[INFO]$(RESET) %s\n" "$(1)"
+endef
+
+define print_success
+	@printf "$(GREEN)$(BOLD)[OK]$(RESET) %s\n" "$(1)"
+endef
+
+define print_warn
+	@printf "$(YELLOW)$(BOLD)[WARN]$(RESET) %s\n" "$(1)"
+endef
+
+define print_error
+	@printf "$(RED)$(BOLD)[ERR]$(RESET) %s\n" "$(1)"
+endef
+
 .PHONY: help doctor env-check config build up down restart ps logs logs-app logs-worker \
 	sh-app sh-db sh-redis app test test-cov lint precommit fmt migrate-up migrate-down \
 	migrate-create migrate-history migrate-current migrate-up-local migrate-down-local \
@@ -20,23 +43,22 @@ PYTHON ?= $(POETRY) run python
 	worker stop prune
 
 help: ## Show all available commands
-	@echo "API Helper - Developer Makefile"
-	@echo ""
-	@awk 'BEGIN {FS = ":.*## "; printf "Usage: make <target>\n\nTargets:\n"} /^[a-zA-Z0-9_.-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@printf "$(CYAN)$(BOLD)API Helper - Developer Makefile$(RESET)\n\n"
+	@awk 'BEGIN {FS = ":.*## "; printf "$(BOLD)Usage:$(RESET) make <target>\n\n$(BOLD)Targets:$(RESET)\n"} /^[a-zA-Z0-9_.-]+:.*## / {printf "  $(GREEN)%-22s$(RESET) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 doctor: ## Verify required local tools
-	@command -v docker >/dev/null || (echo "docker not found"; exit 1)
-	@docker compose version >/dev/null || (echo "docker compose plugin not found"; exit 1)
-	@command -v $(POETRY) >/dev/null || (echo "poetry not found"; exit 1)
-	@echo "All required tools are available."
+	@command -v docker >/dev/null || (printf "$(RED)docker not found$(RESET)\n"; exit 1)
+	@docker compose version >/dev/null || (printf "$(RED)docker compose plugin not found$(RESET)\n"; exit 1)
+	@command -v $(POETRY) >/dev/null || (printf "$(RED)poetry not found$(RESET)\n"; exit 1)
+	$(call print_success,All required tools are available.)
 
 env-check: ## Ensure environment file exists
-	@test -f "$(ENV_FILE)" || (echo "$(ENV_FILE) not found. Copy from .env.example first."; exit 1)
-	@echo "Using env file: $(ENV_FILE)"
+	@test -f "$(ENV_FILE)" || (printf "$(RED)$(ENV_FILE) not found. Copy from .env.example first.$(RESET)\n"; exit 1)
+	$(call print_info,Using env file: $(ENV_FILE))
 
 config: env-check ## Validate and render docker compose config
 	@$(COMPOSE) config >/dev/null
-	@echo "docker compose config is valid."
+	$(call print_success,docker compose config is valid.)
 
 build: env-check ## Build/rebuild all docker images
 	@$(COMPOSE) build
@@ -95,7 +117,7 @@ migrate-down: env-check ## Roll back latest migration inside app container
 	@$(COMPOSE) exec $(APP_SERVICE) poetry run python scripts/manage_migrations.py downgrade
 
 migrate-create: env-check ## Create migration inside app container (usage: make migrate-create MSG="add users table")
-	@test -n "$(MSG)" || (echo "Missing MSG. Example: make migrate-create MSG='add users table'"; exit 1)
+	@test -n "$(MSG)" || (printf "$(YELLOW)Missing MSG. Example: make migrate-create MSG='add users table'$(RESET)\n"; exit 1)
 	@$(COMPOSE) exec $(APP_SERVICE) poetry run python scripts/manage_migrations.py create -m "$(MSG)"
 
 migrate-history: env-check ## Show migration history from app container
@@ -114,7 +136,7 @@ migrate-down-local: ## Roll back latest migration locally (non-docker)
 	@$(PYTHON) scripts/manage_migrations.py downgrade
 
 migrate-create-local: ## Create migration locally (usage: make migrate-create-local MSG="...")
-	@test -n "$(MSG)" || (echo "Missing MSG. Example: make migrate-create-local MSG='add users table'"; exit 1)
+	@test -n "$(MSG)" || (printf "$(YELLOW)Missing MSG. Example: make migrate-create-local MSG='add users table'$(RESET)\n"; exit 1)
 	@$(PYTHON) scripts/manage_migrations.py create -m "$(MSG)"
 
 migrate-history-local: ## Show migration history locally (non-docker)

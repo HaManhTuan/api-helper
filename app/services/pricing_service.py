@@ -11,10 +11,13 @@ from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
 from app.models.price_book_entry import PriceBookEntry
+from app.models.promotion_redemption import PromotionRedemption
 from app.models.service_offering import ServiceOffering
 from app.models.user import User
 from app.repositories.concrete.commission_rule_repository import commission_rule_repository
 from app.repositories.concrete.price_book_entry_repository import price_book_entry_repository
+from app.repositories.concrete.promotion_redemption_repository import promotion_redemption_repository
+from app.repositories.concrete.promotion_repository import promotion_repository
 from app.repositories.concrete.service_offering_repository import service_offering_repository
 from app.schemas.pricing import BookingSnapshotComputeRequest, CommissionRuleUpsertRequest, PriceBookEntryUpsertRequest
 from app.services.tax_service import tax_service
@@ -165,6 +168,7 @@ class PricingService:
         customer_total = 0
         subtotal_before_tax_total = 0
         tax_total = 0
+        promotion_total = 0
         helper_total = 0
         platform_total = 0
 
@@ -192,6 +196,54 @@ class PricingService:
 
             unit_price = int(price_entry.customer_price)
             raw_line_amount = unit_price * int(item.quantity)
+            surged_amount = int(
+                (Decimal(raw_line_amount) * Decimal(str(payload.surge_multiplier))).quantize(
+                    Decimal("1"), rounding=ROUND_HALF_UP
+                )
+            )
+            amount_before_promotion = surged_amount
+
+            applied_promotion_id: Optional[str] = None
+            promotion_discount = 0
+            amount_after_promotion = amount_before_promotion
+            if payload.promotion_code:
+                promo = await promotion_repository.resolve_active(
+                    db,
+                    code=payload.promotion_code,
+                    at=computed_at,
+                    service_id=offering.id,
+                )
+                if promo:
+                    amount_before_promotion = self._resolve_stacked_amount(
+                        base_amount=raw_line_amount,
+                        surged_amount=surged_amount,
+                        stack_rule=promo.stack_rule,
+                    )
+                    promotion_discount = await self._compute_promotion_discount(
+                        db=db,
+                        promotion=promo,
+                        customer_id=payload.customer_id,
+                        amount_before_promotion=amount_before_promotion,
+                    )
+                    amount_after_promotion = max(0, amount_before_promotion - promotion_discount)
+                    if promotion_discount > 0:
+                        applied_promotion_id = promo.id
+                        if not await promotion_redemption_repository.has_consumed_for_booking(
+                            db, booking_id=payload.booking_id
+                        ):
+                            db.add(
+                                PromotionRedemption(
+                                    promotion_id=promo.id,
+                                    customer_id=payload.customer_id,
+                                    booking_id=payload.booking_id,
+                                    quote_id=payload.quote_id,
+                                    redeemed_amount=promotion_discount,
+                                    currency=currency,
+                                    status="consumed",
+                                    redeemed_at=computed_at,
+                                    consumed_at=computed_at,
+                                )
+                            )
 
             tax_rule = await tax_service.resolve_tax_rule(db=db, service_offering_id=offering.id, at=computed_at)
             vat_rate = Decimal(str(tax_rule.vat_rate)) if tax_rule else Decimal("0")
@@ -199,7 +251,7 @@ class PricingService:
             commission_base = tax_rule.commission_base if tax_rule else "before_vat"
 
             subtotal_before_tax, line_tax, line_total = tax_service.compute_tax_breakdown(
-                gross_or_net_amount=raw_line_amount,
+                gross_or_net_amount=amount_after_promotion,
                 vat_rate=vat_rate,
                 display_mode=display_mode,
             )
@@ -217,6 +269,7 @@ class PricingService:
             customer_total += line_total
             subtotal_before_tax_total += subtotal_before_tax
             tax_total += line_tax
+            promotion_total += promotion_discount
             helper_total += helper_earnings
             platform_total += platform_fee
 
@@ -228,6 +281,9 @@ class PricingService:
                     "service_code": item.service_code,
                     "quantity": int(item.quantity),
                     "unit_price": unit_price,
+                    "surge_multiplier": float(payload.surge_multiplier),
+                    "amount_before_promotion": amount_before_promotion,
+                    "promotion_amount": promotion_discount,
                     "subtotal_before_tax": subtotal_before_tax,
                     "tax_amount": line_tax,
                     "line_total": line_total,
@@ -238,6 +294,7 @@ class PricingService:
                     "platform_fee": platform_fee,
                     "applied_price_entry_id": price_entry.id,
                     "applied_commission_rule_id": rule.id,
+                    "applied_promotion_id": applied_promotion_id,
                 }
             )
 
@@ -251,6 +308,7 @@ class PricingService:
             customer_total=customer_total,
             subtotal_before_tax=subtotal_before_tax_total,
             tax_total=tax_total,
+            promotion_total=promotion_total,
             helper_total=helper_total,
             platform_total=platform_total,
             applied_price_entry_id=applied_price_entry_id,
@@ -297,6 +355,46 @@ class PricingService:
             raise ValidationException("Computed shares must be non-negative")
 
         return helper_total, platform_total
+
+    async def _compute_promotion_discount(
+        self,
+        *,
+        db: AsyncSession,
+        promotion,
+        customer_id: str,
+        amount_before_promotion: int,
+    ) -> int:
+        if amount_before_promotion <= 0:
+            return 0
+
+        if promotion.max_redemptions is not None:
+            used_global = await promotion_repository.count_redemptions(db, promotion_id=promotion.id)
+            if used_global >= int(promotion.max_redemptions):
+                return 0
+
+        if promotion.per_user_limit is not None:
+            used_by_customer = await promotion_repository.count_redemptions_by_customer(
+                db, promotion_id=promotion.id, customer_id=customer_id
+            )
+            if used_by_customer >= int(promotion.per_user_limit):
+                return 0
+
+        if promotion.promotion_type == "percent" and promotion.discount_percent is not None:
+            return int(
+                (Decimal(amount_before_promotion) * Decimal(str(promotion.discount_percent)) / Decimal(100)).quantize(
+                    Decimal("1"), rounding=ROUND_HALF_UP
+                )
+            )
+        if promotion.promotion_type == "fixed" and promotion.discount_amount is not None:
+            return min(amount_before_promotion, int(promotion.discount_amount))
+        return 0
+
+    def _resolve_stacked_amount(self, *, base_amount: int, surged_amount: int, stack_rule: str) -> int:
+        if stack_rule == "no_stack_with_surge":
+            return base_amount
+        if stack_rule in ("promotion_then_surge", "surge_then_promotion"):
+            return surged_amount
+        return surged_amount
 
     async def _audit(
         self,
