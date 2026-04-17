@@ -2,6 +2,7 @@ from app.config.constants import API_V1_PREFIX
 from app.config.custom_router import APIRouter as CustomAPIRouter
 from app.controllers import (
     auth_controller,
+    booking_operations_controller,
     health_controller,
     helper_kyc_controller,
     helper_moderation_controller,
@@ -28,6 +29,9 @@ api_router.include_router(
 )
 api_router.include_router(
     staff_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Staff"], requires_auth=True
+)
+api_router.include_router(
+    booking_operations_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Booking Ops"], requires_auth=True
 )
 api_router.include_router(
     helper_moderation_controller.router, prefix=f"{API_V1_PREFIX}/admin", tags=["Admin Helper Moderation"], requires_auth=True

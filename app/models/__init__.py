@@ -7,6 +7,7 @@ This is used by Alembic for auto-generating migrations.
 from app.models.base_model import BaseModel
 
 # Import all entity models
+from app.models.booking import Booking
 from app.models.booking_financial_snapshot import BookingFinancialSnapshot
 from app.models.commercial_audit_log import CommercialAuditLog
 from app.models.commission_rule import CommissionRule
@@ -32,6 +33,7 @@ __all__ = [
     "RolePermission",
     "StaffAuditLog",
     "ServiceOffering",
+    "Booking",
     "PriceBookEntry",
     "CommissionRule",
     "HelperProfile",

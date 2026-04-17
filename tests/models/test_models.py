@@ -5,6 +5,7 @@ This module is imported by the conftest.py to ensure all models are available fo
 
 # Import all model classes here to ensure they're registered with Base.metadata
 from app.models import (
+    Booking,
     BookingFinancialSnapshot,
     CommercialAuditLog,
     CommissionRule,
@@ -41,4 +42,5 @@ __all__ = [
     "CommercialAuditLog",
     "TaxRule",
     "TaxConfig",
+    "Booking",
 ]

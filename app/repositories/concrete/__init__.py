@@ -5,6 +5,7 @@ This module contains specific repository implementations for each model,
 providing model-specific database operations and business logic.
 """
 
+from .booking_repository import BookingRepository, booking_repository
 from .commission_rule_repository import CommissionRuleRepository, commission_rule_repository
 from .helper_document_repository import HelperDocumentRepository, helper_document_repository
 from .helper_document_type_repository import HelperDocumentTypeRepository, helper_document_type_repository
@@ -19,6 +20,8 @@ from .user_repository import UserRepository, user_repository
 __all__ = [
     "UserRepository",
     "user_repository",
+    "BookingRepository",
+    "booking_repository",
     "ServiceOfferingRepository",
     "service_offering_repository",
     "PriceBookEntryRepository",
