@@ -12,6 +12,7 @@ class Booking(BaseModel):
     customer_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
     helper_id = Column(String, ForeignKey("users.id"), nullable=True, index=True)
     quote_id = Column(String(64), nullable=False, index=True)
+    line_items = Column(JSONB, nullable=False, default=list)
     status = Column(String(20), nullable=False, default="pending", index=True)
     scheduled_start = Column(DateTime, nullable=False, index=True)
     scheduled_end = Column(DateTime, nullable=True)
